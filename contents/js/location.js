@@ -119,7 +119,7 @@ function generateMap() {
 
     if (loc.id === "riverport") {
       btn.classList.add("portal-style");
-      const portalImage = loc.mapIcon || "/contents/IconsGame/but.png";
+      const portalImage = loc.mapIcon || "IconsGame/but.png";
       btn.innerHTML = `
         <div class="location-portal-bg" style="background-image: url('${portalImage}');"></div>
         <div class="location-badge-content">
@@ -189,7 +189,7 @@ function showMapActions(loc, nodeElement) {
     loc.bosses.forEach(boss => {
       const bossBtn = document.createElement("button");
       bossBtn.className = "map-action-btn map-boss-btn";
-      bossBtn.innerHTML = `<img src="/contents/IconsGame/IconsLocation/attak1.png" alt="Босс" class="map-action-img">`;
+      bossBtn.innerHTML = `<img src="IconsGame/IconsLocation/attak1.png" alt="Босс" class="map-action-img">`;
       bossBtn.title = `Босс: ${boss.name}`;
       bossBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -202,7 +202,7 @@ function showMapActions(loc, nodeElement) {
   if (hasHouse) {
     const houseBtn = document.createElement("button");
     houseBtn.className = "map-action-btn map-house-btn";
-    houseBtn.innerHTML = `<img src="/contents/IconsGame/IconsLocation/loc1.png" alt="Домик" class="map-action-img">`;
+    houseBtn.innerHTML = `<img src="IconsGame/IconsLocation/loc1.png" alt="Домик" class="map-action-img">`;
     houseBtn.title = `Домик`;
     houseBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -556,7 +556,7 @@ function createFreshBattleState(bossData) {
 
   if (battleBossName) battleBossName.textContent = bossData.name;
   if (battleBossArt) {
-    battleBossArt.innerHTML = `<img src="${bossData.battleImage || '/contents/IconsGame/boss.png'}" class="battle-boss-img" alt="${bossData.name}">`;
+    battleBossArt.innerHTML = `<img src="${bossData.battleImage || 'IconsGame/boss.png'}" class="battle-boss-img" alt="${bossData.name}">`;
   }
 
   if (window.characterApi && window.characterApi.renderBattleHero) {
@@ -1031,7 +1031,7 @@ function triggerReviveGoldenEffect() {
 
   const emblem = document.createElement("img");
   emblem.className = "revive-fx-emblem";
-  emblem.src = "/contents/IconsGame/revive_cross.png";
+  emblem.src = "IconsGame/revive_cross.png";
   emblem.alt = "Воскрешение";
   emblem.onerror = () => {
     emblem.remove();
@@ -1450,7 +1450,7 @@ function triggerVictoryFloatingRewards(triggerEl) {
   if (goldAmt > 0) {
     spawnVictoryFloatingPill(
       `+${goldAmt.toLocaleString("ru-RU")} золота`,
-      "/contents/IconsGame/hud-right/gold-res.png",
+      "IconsGame/hud-right/gold-res.png",
       "🪙",
       clampedX - 48,
       baseY,
@@ -1517,7 +1517,7 @@ function openBossModal(bossData) {
 
   const bossImgEl = document.querySelector(".boss-image");
   if (bossImgEl) {
-    bossImgEl.src = bossData.battleImage || "/contents/IconsGame/boss.png";
+    bossImgEl.src = bossData.battleImage || "IconsGame/boss.png";
     bossImgEl.alt = bossData.name;
   }
 
@@ -1597,23 +1597,23 @@ function updateBossLimitUI(bossData) {
 const HOUSE_UI_CONFIG = {
   tavern: {
     title: "МАГИЧЕСКАЯ ЛАВКА",
-    artImage: "/contents/IconsGame/IconsLocation/Maglavka.jpg",
-    rewardIcon: "/contents/IconsGame/hud-right/gold-res.png",
-    nextIcon: "/contents/IconsGame/hud-right/gold-res.png",
+    artImage: "IconsGame/IconsLocation/Maglavka.jpg",
+    rewardIcon: "IconsGame/hud-right/gold-res.png",
+    nextIcon: "IconsGame/hud-right/gold-res.png",
     resourceIcon: "🦎"
   },
   hut: {
     title: "ХИЖИНА ОТШЕЛЬНИКА",
-    artImage: "/contents/IconsGame/IconsLocation/loc2.jpg",
-    rewardIcon: "/contents/IconsGame/HPbutel.png",
-    nextIcon: "/contents/IconsGame/HPbutel.png",
+    artImage: "IconsGame/IconsLocation/loc2.jpg",
+    rewardIcon: "IconsGame/HPbutel.png",
+    nextIcon: "IconsGame/HPbutel.png",
     resourceIcon: "🧪"
   },
   tavern2: {
     title: "ТАВЕРНА СЕВЕРНОГО РИВЕРПОРТА",
-    artImage: "/contents/IconsGame/IconsLocation/loc4.jpg",
-    rewardIcon: "/contents/IconsGame/hud-right/silver-res.png",
-    nextIcon: "/contents/IconsGame/hud-right/silver-res.png",
+    artImage: "IconsGame/IconsLocation/loc4.jpg",
+    rewardIcon: "IconsGame/hud-right/silver-res.png",
+    nextIcon: "IconsGame/hud-right/silver-res.png",
     resourceIcon: "🕷️"
   }
 };
@@ -1878,7 +1878,7 @@ window.startArenaBattleViaBoss = function(opponent, callbacks) {
     rewardTail: 0,
     dailyLimit: 9999,
     staminaCost: 0, 
-    battleImage: "/contents/IconsGame/boss.png",
+    battleImage: "IconsGame/boss.png",
     isArena: true // 🔴 ВАЖНО: флаг, что это арена
   };
 
