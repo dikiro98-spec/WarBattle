@@ -1,0 +1,813 @@
+/* ========================================= */
+/* STYLE.CSS — База, HUD, навигация, модалки */
+/* ========================================= */
+
+:root {
+  /* Палитра пергамента и золота (единый стиль окон) */
+  --parchment-bg: #f4ead5;
+  --parchment-panel: #fdf5e6;
+  --parchment-card: #fff9ed;
+  --parchment-border: #c8b08a;
+  --parchment-border-light: #d1b894;
+  --gold-main: #e5b947;
+  --gold-light: #f7d56d;
+  --gold-dark: #c49a30;
+  --gold-shadow: #b08825;
+  --text-dark: #4a3a2a;
+  --text-muted: #8a7a6a;
+
+  /* Тёмная тема (HUD и боевые экраны) */
+  --dark-bg: #0c0a08;
+  --dark-panel: rgba(24, 18, 13, 0.94);
+  --dark-gold: #ffd76e;
+  --danger: #d32f2f;
+  --danger-light: #f44336;
+  --danger-shadow: #8b1e1e;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+  background: #050608;
+  color: #f6e7bf;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background:
+    linear-gradient(rgba(8, 6, 4, 0.25), rgba(8, 6, 4, 0.45)),
+    url("/contents/IconsGame/testfon.jpg") center/cover no-repeat fixed;
+}
+
+button { font: inherit; }
+.hidden { display: none !important; }
+
+/* Кастомные скроллбары */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.12); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: rgba(196, 154, 48, 0.65); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #e5b947; }
+
+/* ========================================= */
+/* 1. ОБЁРТКА ИГРЫ                           */
+/* ========================================= */
+.game-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  border-left: 2px solid rgba(229, 185, 71, 0.25);
+  border-right: 2px solid rgba(229, 185, 71, 0.25);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.85);
+}
+
+@media (max-width: 1280px) {
+  .game-wrapper { max-width: 100%; border: none; box-shadow: none; }
+}
+
+.game-wrapper .battlefield {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.battlefield-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(17, 11, 5, 0.18), rgba(17, 11, 5, 0.35)),
+    radial-gradient(circle at center, rgba(255, 228, 170, 0.09), transparent 50%);
+  pointer-events: none;
+}
+
+/* ========================================= */
+/* 2. ОБЩИЕ КЛАССЫ СВЕТЛЫХ ОКОН (ПЕРГАМЕНТ)  */
+/* ========================================= */
+.ui-window {
+  background: var(--parchment-bg);
+  border: 4px solid var(--gold-main);
+  border-radius: 14px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 0 0 2px #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.ui-window::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#d4c4a8 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ui-close-btn,
+.guild-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: linear-gradient(to bottom, #e53935, #c62828);
+  color: #fff;
+  border: 2px solid #ff6659;
+  border-radius: 8px;
+  font-size: 19px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 0 var(--danger-shadow), inset 0 2px 0 rgba(255, 255, 255, 0.35);
+  transition: transform 0.1s, filter 0.15s;
+  z-index: 25;
+}
+
+.ui-close-btn:hover,
+.guild-close-btn:hover { filter: brightness(1.08); }
+
+.ui-close-btn:active,
+.guild-close-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--danger-shadow), inset 0 2px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* ========================================= */
+/* 3. ВЕРХНИЙ HUD                            */
+/* ========================================= */
+.top-hud-new {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 18px;
+  background: linear-gradient(180deg, rgba(22, 15, 9, 0.92) 0%, rgba(22, 15, 9, 0.65) 70%, transparent 100%);
+  position: relative;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.hud-profile-new {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+.hud-profile-new:hover { transform: scale(1.02); }
+
+.hud-avatar-new {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2.5px solid var(--gold-main);
+  background: #1a1512;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(229, 185, 71, 0.45), inset 0 0 8px rgba(0, 0, 0, 0.8);
+}
+
+.hud-avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+/* Камера лица в HUD */
+.hud-camera-zoom {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 350%;
+  height: auto;
+  transform: translate(-50%, -45%);
+  display: flex;
+  justify-content: center;
+}
+
+.hud-face-body {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hud-face-helmet {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 25%;
+  height: auto;
+  object-fit: contain;
+  z-index: 2;
+}
+
+.hud-level-new {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #db4f39, #8b1d13);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 1px 8px;
+  border-radius: 10px 10px 0 0;
+  border-top: 1.5px solid #f3c75c;
+  white-space: nowrap;
+  z-index: 3;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.6);
+}
+
+.hud-info-new {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* Полоска опыта */
+.hud-hp-bar-new {
+  width: 220px;
+  height: 22px;
+  background: linear-gradient(180deg, rgba(45, 45, 55, 0.95), rgba(18, 18, 22, 0.95));
+  border: 1.5px solid #7a6540;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.85), 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hud-hp-fill-new {
+  height: 100%;
+  background: linear-gradient(90deg, #0077b6, #00b4d8);
+  box-shadow: 0 0 8px rgba(0, 180, 216, 0.6);
+  transition: width 0.3s ease;
+}
+
+.hud-hp-text-new {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  text-shadow: 1px 1px 2px #000;
+  color: #fff;
+}
+
+.hud-days-new, .hud-premium-new {
+  font-size: 10px;
+  font-weight: 700;
+  color: #cbb894;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 1px 1px 2px #000;
+  line-height: 1.15;
+}
+
+/* Ресурсы */
+.hud-right-new { display: flex; align-items: center; gap: 12px; }
+.hud-resources-new { display: flex; align-items: center; gap: 10px; }
+
+.hud-res-col-left,
+.hud-res-col-right {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.hud-res-new {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(45, 38, 30, 0.94), rgba(20, 16, 12, 0.96));
+  border: 1.5px solid #7a6540;
+  border-radius: 9px;
+  padding: 2px 5px 2px 3px;
+  gap: 6px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8), 0 2px 5px rgba(0, 0, 0, 0.5);
+  height: 32px;
+  transition: border-color 0.15s;
+}
+.hud-res-new:hover { border-color: var(--gold-main); }
+
+.hud-res-icon-img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.85));
+}
+
+.hud-res-val {
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff3d6;
+  text-shadow: 1px 1px 2px #000;
+  white-space: nowrap;
+  padding-right: 3px;
+}
+
+.hud-plus-new {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #5ce661, #2c9e31);
+  color: #fff;
+  border: 1px solid #1a5c1d;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  flex-shrink: 0;
+  transition: transform 0.1s, filter 0.15s;
+}
+.hud-plus-new:hover { filter: brightness(1.12); }
+.hud-plus-new:active { transform: scale(0.9); }
+
+/* ========================================= */
+/* 4. ПАНЕЛЬ КВЕСТОВ                         */
+/* ========================================= */
+.quests-sidebar {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 40;
+}
+
+.quest-circle-btn {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(180deg, #3a2b22, #1e1611);
+  border: 2px solid #9c754b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  font-size: 18px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.quest-circle-btn:hover { transform: scale(1.08); border-color: var(--gold-main); }
+.quest-circle-btn.ready {
+  border-color: #55e65a;
+  box-shadow: 0 0 10px #55e65a;
+  animation: pulse-quest 1.5s infinite;
+}
+
+.quest-tooltip {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 10px);
+  transform: translateY(-50%);
+  background: rgba(24, 18, 13, 0.96);
+  color: #ffe3a1;
+  padding: 6px 12px;
+  border: 1.5px solid var(--gold-main);
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 1000;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.75);
+  pointer-events: none;
+}
+.quest-circle-btn:hover .quest-tooltip { display: block; }
+
+@keyframes pulse-quest {
+  0%, 100% { box-shadow: 0 0 5px #55e65a; }
+  50% { box-shadow: 0 0 15px #55e65a; }
+}
+
+/* ========================================= */
+/* 5. НИЖНЯЯ НАВИГАЦИОННАЯ ПАНЕЛЬ            */
+/* ========================================= */
+.bottom-panel-new {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  background: linear-gradient(0deg, rgba(16, 11, 7, 0.98) 0%, rgba(24, 17, 11, 0.9) 85%, transparent 100%);
+  padding: 10px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+  border-top: 1px solid rgba(229, 185, 71, 0.25);
+}
+
+.bottom-nav-row-new {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav-icon-btn-new {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #ffd76e;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-shadow: 1px 1px 2px #000, 0 0 6px rgba(0, 0, 0, 0.8);
+  transition: transform 0.15s, color 0.15s;
+}
+.nav-icon-btn-new:hover { transform: translateY(-3px); color: #fff; }
+.nav-icon-btn-new:active { transform: scale(0.95); }
+
+.nav-img {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #8c6d3f;
+  background: #222;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.65);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.nav-icon-btn-new:hover .nav-img {
+  border-color: var(--gold-main);
+  box-shadow: 0 4px 14px rgba(229, 185, 71, 0.45);
+}
+
+.campaign-btn-new .nav-img {
+  width: 72px;
+  height: 72px;
+  border: 2.5px solid var(--gold-main);
+  box-shadow: 0 0 18px rgba(229, 185, 71, 0.45);
+  margin-bottom: -4px;
+}
+
+.nav-text-new { font-size: 10px; white-space: nowrap; }
+
+/* ========================================= */
+/* 6. СЛУЖЕБНЫЕ КНОПКИ (СБРОС, МУЗЫКА И Т.Д.)*/
+/* ========================================= */
+#reset-game-btn,
+.music-btn,
+.fullscreen-btn,
+.achievement-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(24, 18, 13, 0.9);
+  border: 2px solid rgba(229, 185, 71, 0.55);
+  color: #ffd76e;
+  font-size: 19px;
+  cursor: pointer;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55);
+  transition: all 0.2s;
+}
+
+#reset-game-btn { right: 18px; }
+.music-btn { right: 70px; }
+.fullscreen-btn { right: 122px; font-size: 21px; }
+.achievement-toggle-btn { right: 174px; }
+
+#reset-game-btn:hover,
+.music-btn:hover,
+.fullscreen-btn:hover,
+.achievement-toggle-btn:hover {
+  background: rgba(45, 34, 24, 0.95);
+  border-color: #ffd76e;
+  transform: scale(1.08);
+}
+
+#reset-game-btn:hover { transform: scale(1.08) rotate(45deg); }
+#reset-game-btn:active,
+.music-btn:active,
+.fullscreen-btn:active,
+.achievement-toggle-btn:active { transform: scale(0.92); }
+
+/* ========================================= */
+/* 7. ТАЛАНТЫ И ДОСТИЖЕНИЯ                   */
+/* ========================================= */
+.talents-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px 24px 24px;
+}
+
+.talent-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 2px solid var(--parchment-border-light);
+  background: var(--parchment-panel);
+  color: var(--text-dark);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.talent-name {
+  color: var(--text-dark);
+  font-size: 15px;
+  font-weight: 900;
+  text-transform: uppercase;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--parchment-border-light);
+  text-align: center;
+}
+
+.talent-body {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.talent-icon-wrap {
+  position: relative;
+  flex: 0 0 68px;
+  width: 68px;
+  height: 68px;
+  border-radius: 10px;
+  border: 2px solid var(--gold-dark);
+  background: rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+}
+
+.talent-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.talent-level-badge {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: rgba(18, 13, 10, 0.86);
+  color: #ffd76e;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.talent-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.talent-desc {
+  font-size: 13px;
+  color: #2e7d32;
+  font-weight: 800;
+}
+
+.talent-level,
+.talent-cost {
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.talent-level span,
+.talent-cost span {
+  color: var(--text-dark);
+  font-weight: 900;
+}
+
+/* ========================================= */
+/* 8. ОКНО ПОВЫШЕНИЯ УРОВНЯ                  */
+/* ========================================= */
+.level-up-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.level-up-content {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: linear-gradient(180deg, #2a1f1a 0%, #110a07 100%);
+  border: 2px solid #ffcc00;
+  border-radius: 24px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 0 50px rgba(255, 204, 0, 0.35);
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  overflow: hidden;
+}
+
+.level-up-title {
+  color: #ffcc00;
+  font-size: 24px;
+  font-weight: 900;
+  margin: 0 0 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 10px rgba(255, 204, 0, 0.5);
+}
+
+.level-up-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 24px;
+  background: radial-gradient(circle, #ffaa00, #cc5500);
+  border-radius: 50%;
+  border: 4px solid #fff;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 10px 20px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-weight: 900;
+}
+.level-up-badge span:first-child { font-size: 11px; letter-spacing: 1px; }
+.js-level-number { font-size: 46px; line-height: 1; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); }
+
+.level-up-rewards { display: flex; justify-content: center; gap: 12px; margin-bottom: 26px; }
+.reward-item {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 215, 110, 0.25);
+  border-radius: 12px;
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  color: #fff;
+  font-weight: 900;
+}
+.reward-amount { color: #ffd76e; font-size: 16px; font-weight: 900; }
+
+.level-up-btn {
+  width: 100%;
+  min-height: 50px;
+  background: linear-gradient(180deg, #ffcc00, #e6a800);
+  border: none;
+  border-radius: 14px;
+  color: #221100;
+  font-size: 18px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #996300;
+  transition: all 0.1s;
+}
+.level-up-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #996300; }
+
+/* ========================================= */
+/* 9. ЭКРАН ЗАГРУЗКИ                         */
+/* ========================================= */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease;
+}
+.loading-screen.fade-out { opacity: 0; pointer-events: none; }
+.loading-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(5, 5, 8, 0.85), rgba(5, 5, 8, 0.95)), url("/contents/IconsGame/testfon.jpg") center/cover no-repeat;
+}
+.loading-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.loading-logo { width: 84px; height: 84px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); }
+.loading-title {
+  color: #ffd700;
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 2px 2px 4px #000;
+}
+.loading-bar-container {
+  width: 300px;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #7a6540;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.loading-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #ffd700, #ffb652);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  transition: width 0.3s ease;
+}
+.loading-text {
+  color: #cbb894;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  animation: pulseText 1.5s infinite;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes pulseText { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* ========================================= */
+/* 10. МОБИЛЬНЫЙ АДАПТИВ                     */
+/* ========================================= */
+@media (max-width: 1100px) {
+  .hud-right-new { flex-wrap: wrap; }
+}
+
+@media (max-width: 768px) {
+  .top-hud-new {
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .hud-profile-new { gap: 10px; width: 100%; justify-content: center; }
+  .hud-hp-bar-new { width: 180px; height: 18px; }
+  .hud-hp-text-new { font-size: 10px; }
+  .hud-days-new, .hud-premium-new { font-size: 8px; }
+
+  .hud-right-new, .hud-resources-new { justify-content: center; flex-wrap: wrap; gap: 6px; }
+  .hud-res-col-left, .hud-res-col-right { display: contents; }
+  .hud-res-new { height: 28px; padding: 2px 5px 2px 2px; }
+  .hud-res-icon-img { width: 22px; height: 22px; }
+  .hud-res-val { font-size: 11px; }
+  .hud-plus-new { width: 18px; height: 18px; font-size: 12px; }
+
+  .nav-img { width: 46px; height: 46px; }
+  .campaign-btn-new .nav-img { width: 60px; height: 60px; }
+  .nav-text-new { font-size: 9px; }
+  .bottom-panel-new { padding: 8px 8px 10px; }
+  .bottom-nav-row-new { gap: 4px; }
+
+  #reset-game-btn, .music-btn, .fullscreen-btn, .achievement-toggle-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+    bottom: 10px;
+  }
+  #reset-game-btn { right: 10px; }
+  .music-btn { right: 54px; }
+  .fullscreen-btn { right: 98px; }
+  .achievement-toggle-btn { right: 142px; }
+
+  .talents-modal { width: calc(100% - 16px); }
+  .talents-grid { grid-template-columns: 1fr; padding: 14px; }
+}

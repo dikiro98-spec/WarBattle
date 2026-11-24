@@ -1,0 +1,1329 @@
+/* ========================================= */
+/* BATTLE.CSS — Босс, экран боя, итоги, арена*/
+/* ========================================= */
+
+/* ========================================= */
+/* 1. МОДАЛКА ПРЕВЬЮ БОССА                   */
+/* ========================================= */
+.boss-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.boss-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+}
+
+.battle-container {
+  position: relative;
+  z-index: 2;
+  width: min(1160px, calc(100vw - 32px));
+  height: min(660px, calc(100vh - 32px));
+  display: grid;
+  grid-template-columns: 300px 1fr 300px;
+  gap: 18px;
+  padding: 18px;
+}
+
+.side-panel {
+  background: #f4ead5;
+  border: 3px solid #e5b947;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), inset 0 0 0 2px #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: #4a3a2a;
+}
+
+.panel-decorator-top, .panel-decorator-bottom {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 20px;
+  background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg"><path d="M0,10 Q25,0 50,10 T100,10" fill="none" stroke="%23e5b947" stroke-width="3"/></svg>') no-repeat center;
+}
+.panel-decorator-top { top: -12px; }
+.panel-decorator-bottom { bottom: -12px; }
+
+.close-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(to bottom, #e53935, #c62828);
+  color: #fff;
+  border: 2px solid #ff6659;
+  border-radius: 8px;
+  font-size: 19px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #8b1e1e, inset 0 2px 0 rgba(255, 255, 255, 0.35);
+  z-index: 10;
+}
+.close-btn:active { transform: translateY(3px); box-shadow: none; }
+
+/* Левая панель: ТОП */
+.left-panel { padding: 22px 14px; }
+.top-title {
+  text-align: center;
+  font-size: 17px;
+  color: #4a3a2a;
+  font-weight: 900;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.top-list { list-style: none; display: flex; flex-direction: column; gap: 6px; padding: 0; margin: 0; }
+.top-item {
+  display: flex;
+  align-items: center;
+  background: #fdf5e6;
+  border: 1px solid #d1b894;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: #4a3a2a;
+  border-left: 4px solid transparent;
+}
+.top-item:nth-child(1) { border-left-color: #e5b947; background: rgba(247, 213, 109, 0.35); font-weight: 800; }
+.top-item:nth-child(2) { border-left-color: #9e9e9e; background: rgba(204, 204, 204, 0.3); font-weight: 800; }
+.top-item:nth-child(3) { border-left-color: #cd7f32; background: rgba(205, 127, 50, 0.25); font-weight: 800; }
+
+.rank { width: 20px; font-weight: 900; color: #8a7a6a; }
+.avatar { width: 28px; height: 28px; border-radius: 6px; background: #333; margin-right: 8px; border: 1px solid #c8b08a; }
+.name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.score { display: flex; align-items: center; gap: 4px; font-weight: 900; color: #4a3a2a; }
+.update-text { font-size: 11px; color: #8a7a6a; text-align: center; margin-top: auto; padding-top: 10px; }
+
+/* Центр: босс и кнопка боя */
+.center-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 8px;
+  position: relative;
+}
+
+.boss-header { text-align: center; width: 70%; margin-bottom: 14px; }
+.boss-name {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px #000, 0 0 12px rgba(255, 215, 110, 0.4);
+  margin-bottom: 6px;
+}
+
+.boss-hp-bar {
+  width: 100%;
+  height: 20px;
+  background: #3b0808;
+  border: 2px solid #000;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.35);
+}
+.boss-hp-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #ff5252, #b71c1c);
+}
+.boss-hp-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 1px 1px 2px #000;
+  z-index: 2;
+}
+
+.boss-image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.boss-image {
+  max-height: 410px;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 18px rgba(0, 0, 0, 0.85));
+  mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
+}
+
+.fight-btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.btn-fight {
+  min-width: 200px;
+  padding: 12px 24px;
+  background: linear-gradient(to bottom, #f7d56d, #e5b947);
+  border: 2px solid #c49a30;
+  border-radius: 10px;
+  color: #4a3a2a;
+  font-size: 17px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #b08825, inset 0 2px 0 rgba(255, 255, 255, 0.5);
+  transition: all 0.1s;
+}
+.btn-fight:active { transform: translateY(4px); box-shadow: none; }
+
+.stamina-cost {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 900;
+  text-shadow: 1px 1px 3px #000;
+}
+
+/* Правая панель: описание и лут */
+.right-panel { padding: 22px 18px; align-items: center; }
+.desc-title { font-size: 17px; color: #4a3a2a; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
+.desc-text { font-size: 13px; color: #5a4a3a; text-align: center; line-height: 1.4; margin-bottom: 16px; }
+.stat-title { font-size: 13px; color: #8a7a6a; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; }
+
+.attack-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fdf5e6;
+  padding: 5px 16px;
+  border-radius: 20px;
+  border: 1.5px solid #d1b894;
+  font-weight: 900;
+  font-size: 17px;
+  color: #4a3a2a;
+  margin-bottom: 16px;
+}
+.attack-icon {
+  width: 28px;
+  height: 28px;
+  background: #c62828;
+  border-radius: 50%;
+  border: 2px solid #ff6659;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 13px;
+}
+
+.loot-container { display: flex; gap: 12px; margin-bottom: 16px; }
+.loot-item {
+  width: 66px;
+  height: 66px;
+  background: #241b13;
+  border: 2px solid #7a5624;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 900;
+  color: #fff;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8);
+}
+.loot-item.gold-star { border-color: #f7d56d; box-shadow: 0 0 12px rgba(247, 213, 109, 0.45); }
+
+.chance-bar-wrapper { width: 100%; margin-top: auto; }
+.chance-bar-bg {
+  width: 100%;
+  height: 18px;
+  background: #2b2118;
+  border: 2px solid #7a5624;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.chance-bar-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #f7d56d, #d4af37);
+}
+.chance-bar-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  text-shadow: 1px 1px 2px #000;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.mobile-close-btn { display: none; }
+
+/* ========================================= */
+/* 2. ЭКРАН БОЯ                              */
+/* ========================================= */
+.boss-battle-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 700;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  overflow: hidden;
+}
+
+.battle-bg {
+  position: absolute;
+  inset: 0;
+  background: url('/contents/IconsGame/fongame.jpg') center/cover no-repeat;
+  z-index: 1;
+}
+
+.battle-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  background: rgba(20, 14, 8, 0.7);
+  border: 2px solid rgba(255, 215, 110, 0.5);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, border-color 0.15s;
+}
+.battle-close-btn:hover { border-color: #ffd76e; transform: scale(1.06); }
+
+.battle-layout {
+  --char-w: clamp(120px, 36vw, 195px);
+  --char-h: clamp(190px, 30vh, 295px);
+
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 58px clamp(10px, 3vw, 24px) 12px;
+  pointer-events: none;
+}
+.battle-layout > * { pointer-events: auto; }
+
+.battle-arena {
+  width: 100%;
+  max-width: 820px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  column-gap: 10px;
+  align-items: start;
+  pointer-events: none;
+}
+
+.battle-fighter { display: flex; flex-direction: column; min-width: 0; }
+.battle-fighter-player { align-items: flex-start; }
+.battle-fighter-boss   { align-items: flex-end; }
+
+.battle-name {
+  width: 100%;
+  height: 20px;
+  line-height: 20px;
+  margin-bottom: 4px;
+  color: #fff;
+  font-size: clamp(12px, 3vw, 15px);
+  font-weight: 800;
+  text-shadow: 1px 1px 3px #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.battle-fighter-player .battle-name { text-align: left; }
+.battle-fighter-boss   .battle-name { text-align: right; }
+
+.battle-hp-bar {
+  width: 100%;
+  height: 20px;
+  margin-bottom: 4px;
+  background: #3b0808;
+  border: 2px solid #000;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.85);
+}
+.battle-hp-fill {
+  height: 100%;
+  background: linear-gradient(to bottom, #ff5252, #b71c1c);
+  transition: width 0.2s;
+}
+.battle-hp-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: clamp(9px, 2.4vw, 11px);
+  font-weight: 800;
+  text-shadow: 1px 1px 2px #000;
+}
+
+.battle-rage-bar {
+  width: 72%;
+  height: 16px;
+  margin-bottom: 4px;
+  background: #002244;
+  border: 2px solid #000;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+.battle-rage-fill {
+  height: 100%;
+  background: linear-gradient(to bottom, #00d2ff, #0077b6);
+  transition: width 0.2s;
+}
+.battle-rage-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: clamp(8px, 2vw, 9px);
+  font-weight: 800;
+  text-shadow: 1px 1px 2px #000;
+}
+
+.battle-fighter-boss .battle-hp-bar { margin-bottom: 24px; }
+
+.battle-timer-text {
+  align-self: start;
+  min-width: 86px;
+  padding-top: 24px;
+  text-align: center;
+  color: #ffd76e;
+  font-size: clamp(16px, 4vw, 22px);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 1px 1px 4px #000;
+  line-height: 20px;
+}
+
+.actor {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  padding-top: 6px;
+}
+.player-actor { justify-content: flex-start; }
+.boss-actor   { justify-content: flex-end; }
+
+.battle-layout .battle-hero-doll {
+  position: relative;
+  width: var(--char-w) !important;
+  height: var(--char-h) !important;
+  flex: 0 0 auto;
+}
+
+.battle-hero-body {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  z-index: 1;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.9));
+}
+
+.battle-hero-layer {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.9));
+}
+
+.js-battle-helmet { top: 5%; left: 50%; transform: translateX(-50%); width: 52%; }
+.js-battle-armor  { top: 30%; left: 50%; transform: translateX(-50%); width: 96%; }
+.js-battle-weapon { bottom: 30%; right: 8%; width: 48%; transform: rotate(-30deg); }
+.js-battle-shield { bottom: 35%; left: 8%; width: 64%; }
+
+.battle-boss-art {
+  width: var(--char-w) !important;
+  height: var(--char-h) !important;
+  flex: 0 0 auto;
+}
+.battle-boss-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.9));
+}
+
+/* Расходники */
+.battle-consumables {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 14px;
+}
+
+.battle-item {
+  width: clamp(46px, 12vw, 54px);
+  height: clamp(46px, 12vw, 54px);
+  background: rgba(20, 14, 8, 0.75);
+  border: 2px solid #e5b947;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.85);
+  transition: transform 0.1s;
+}
+.battle-item:active { transform: scale(0.92); }
+.battle-item:disabled { opacity: 0.4; filter: grayscale(1); }
+.consumable-img { width: 74%; height: 74%; object-fit: contain; }
+
+.battle-item-count {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: #1a1208;
+  color: #ffd76e;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 10px;
+  border: 1.5px solid #e5b947;
+}
+
+/* Навыки */
+.battle-skill-row {
+  display: flex;
+  justify-content: center;
+  gap: clamp(10px, 3vw, 18px);
+  margin-top: 14px;
+}
+
+.battle-skill-btn {
+  width: clamp(66px, 19vw, 82px);
+  height: clamp(66px, 19vw, 82px);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+}
+.battle-skill-btn:active { transform: scale(0.9); }
+.battle-skill-btn:disabled { filter: grayscale(1); opacity: 0.5; cursor: not-allowed; }
+
+.skill-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.85));
+}
+
+.battle-skill-cost {
+  position: absolute;
+  bottom: -5px;
+  background: #0077b6;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1.5px solid #00d2ff;
+}
+
+/* Лог боя */
+.battle-log {
+  margin-top: 16px;
+  color: #fff3d6;
+  font-size: clamp(13px, 3.6vw, 16px);
+  font-weight: 800;
+  line-height: 1.3;
+  text-align: center;
+  text-shadow: 1px 1px 3px #000;
+  background: rgba(20, 14, 8, 0.78);
+  border: 1px solid rgba(229, 185, 71, 0.35);
+  padding: 10px 20px;
+  border-radius: 14px;
+  width: 92%;
+  max-width: 440px;
+}
+
+/* Кнопки после смерти */
+.battle-death-actions {
+  position: absolute;
+  top: 118px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 30;
+}
+
+.battle-revive-btn,
+.battle-escape-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 96px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.battle-revive-btn:active, .battle-escape-btn:active { transform: scale(0.92); }
+.death-action-img { width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.85)); }
+.death-action-text {
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+/* ========================================= */
+/* 3. ЭКРАНЫ ПОБЕДЫ И ПОРАЖЕНИЯ              */
+/* ========================================= */
+.boss-victory-screen,
+.boss-defeat-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 750;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(10px, 3vw, 20px);
+  overflow-y: auto;
+}
+
+.boss-victory-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 8, 14, 0.78);
+  backdrop-filter: blur(4px);
+  z-index: 1;
+}
+
+.boss-victory-window {
+  position: relative;
+  z-index: 2;
+  width: min(520px, 100%);
+  max-height: calc(100dvh - 24px);
+  border-radius: 16px;
+  overflow-y: auto;
+  border: 3px solid #e5b947;
+  background: linear-gradient(180deg, rgba(36, 26, 15, 0.98), rgba(14, 18, 26, 0.99));
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), inset 0 0 0 1px rgba(255, 225, 140, 0.22);
+  display: flex;
+  flex-direction: column;
+  animation: resultWindowPop 0.25s ease-out;
+}
+
+@keyframes resultWindowPop {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.boss-victory-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(16px, 3.5vw, 24px) clamp(14px, 3.5vw, 22px) 16px;
+  gap: 10px;
+}
+
+.boss-victory-trophy-left {
+  color: #ffe4b3;
+  font-size: clamp(12px, 3vw, 13px);
+  font-weight: 800;
+  background: rgba(255, 215, 110, 0.1);
+  border: 1px solid rgba(255, 215, 110, 0.28);
+  padding: 4px 12px;
+  border-radius: 999px;
+  text-align: center;
+}
+
+.boss-victory-title {
+  color: #ffd76e;
+  font-size: clamp(20px, 5.2vw, 26px);
+  font-weight: 900;
+  line-height: 1.15;
+  text-align: center;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85), 0 0 16px rgba(255, 215, 110, 0.25);
+  margin: 0;
+}
+
+.boss-victory-drops-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin: 4px 0;
+}
+
+.boss-victory-drop-item {
+  flex: 1 1 130px;
+  max-width: 210px;
+  min-width: 0;
+  background: rgba(255, 248, 225, 0.06);
+  border: 1.5px solid rgba(229, 185, 71, 0.45);
+  border-radius: 12px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: clamp(14px, 3.8vw, 17px);
+  font-weight: 900;
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+.boss-victory-drop-item img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex: none;
+}
+
+.boss-limit-warning {
+  width: 100%;
+  background: rgba(139, 0, 0, 0.82);
+  border: 1.5px solid #ff5252;
+  border-radius: 10px;
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.limit-warning-title {
+  color: #ffea00;
+  font-size: clamp(14px, 3.8vw, 16px);
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.limit-warning-text {
+  color: #fff;
+  font-size: clamp(11px, 3vw, 13px);
+  font-weight: 700;
+  line-height: 1.35;
+  margin-top: 2px;
+}
+
+.boss-my-damage {
+  color: #ffe4b3;
+  font-size: clamp(13px, 3.5vw, 14px);
+  font-weight: 800;
+  text-align: center;
+}
+
+.boss-victory-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.boss-repeat-fight-btn,
+.boss-victory-ok-btn {
+  flex: 1 1 155px;
+  min-width: 132px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 2px solid #c49a30;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: clamp(13px, 3.5vw, 14px);
+  font-weight: 900;
+  line-height: 1.2;
+  color: #4a3a2a;
+  background: linear-gradient(to bottom, #f7d56d, #e5b947);
+  box-shadow: 0 3px 0 #b08825;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform 0.1s, filter 0.15s;
+}
+
+.boss-repeat-fight-btn:hover,
+.boss-victory-ok-btn:hover {
+  filter: brightness(1.04);
+}
+
+.boss-repeat-fight-btn:active,
+.boss-victory-ok-btn:active {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+.boss-repeat-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #4a3a2a;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.boss-victory-bottom {
+  border-top: 1px solid rgba(255, 220, 139, 0.2);
+  padding: 12px 16px 16px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.boss-victory-panel-title {
+  color: #ffd76e;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.boss-victory-warrior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  color: #f5efe6;
+  font-size: clamp(12px, 3.2vw, 13px);
+  padding: 6px 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.boss-victory-warrior:last-child {
+  border-bottom: none;
+}
+
+.boss-victory-warrior strong {
+  color: #ffd76e;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+/* Аккуратный вид экрана поражения (если используется та же структура или вложенные элементы) */
+.boss-defeat-screen .boss-victory-window,
+.boss-defeat-screen .boss-defeat-window {
+  border-color: #c62828;
+  background: linear-gradient(180deg, rgba(44, 18, 18, 0.98), rgba(16, 14, 20, 0.99));
+}
+
+.boss-defeat-screen .boss-victory-title,
+.boss-defeat-screen .boss-defeat-title {
+  color: #ff6b6b;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+}
+
+/* ========================================= */
+/* 4. КНОПКА ВОЗВРАТА В БОЙ                  */
+/* ========================================= */
+.return-to-battle-btn {
+  position: absolute;
+  bottom: 115px;
+  right: 20px;
+  z-index: 50;
+  background: linear-gradient(180deg, #ff4b4b, #b30000);
+  border: 2px solid #ffd76e;
+  border-radius: 50%;
+  width: 58px;
+  height: 58px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(255, 75, 75, 0.65), 0 4px 10px rgba(0, 0, 0, 0.5);
+  animation: pulseRed 1.5s infinite;
+  transition: transform 0.1s;
+}
+.return-to-battle-btn:active { transform: scale(0.92); }
+.return-text { display: none; }
+.return-icon { font-size: 26px; }
+
+@keyframes pulseRed {
+  0%, 100% { box-shadow: 0 0 18px rgba(255, 75, 75, 0.6), 0 4px 10px rgba(0, 0, 0, 0.5); }
+  50% { box-shadow: 0 0 36px rgba(255, 75, 75, 1), 0 4px 10px rgba(0, 0, 0, 0.5); }
+}
+
+body:has(.campaign-screen:not(.hidden)) .return-to-battle-btn,
+body:has(.shop-modal-overlay:not(.hidden)) .return-to-battle-btn,
+body:has(.arena-screen:not(.hidden)) .return-to-battle-btn,
+body:has(.forge-screen:not(.hidden)) .return-to-battle-btn,
+body:has(.lottery-screen:not(.hidden)) .return-to-battle-btn,
+body:has(.guild-screen:not(.hidden)) .return-to-battle-btn,
+body:has(.boss-modal:not(.hidden)) .return-to-battle-btn,
+body:has(.house-modal:not(.hidden)) .return-to-battle-btn {
+  display: none !important;
+}
+
+/* ========================================= */
+/* 5. ВСПЛЫВАЮЩИЙ УРОН И ДОСТИЖЕНИЯ          */
+/* ========================================= */
+.damage-popup {
+  position: absolute;
+  font-size: 25px;
+  font-weight: 900;
+  color: #ff3333;
+  text-shadow: 0 0 4px #000, 0 0 8px #ff0000, 2px 2px 2px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+  animation: floatUpDamage 0.8s ease-out forwards;
+  z-index: 99999;
+}
+
+.damage-popup.player-damage {
+  color: #ffcc00;
+  text-shadow: 0 0 4px #000, 0 0 8px #ff8800, 2px 2px 2px rgba(0, 0, 0, 0.85);
+  font-size: 27px;
+}
+
+@keyframes floatUpDamage {
+  0%   { opacity: 0; transform: translate(-50%, 0) scale(0.6); }
+  20%  { opacity: 1; transform: translate(-50%, -10px) scale(1.2); }
+  100% { opacity: 0; transform: translate(-50%, -65px) scale(1); }
+}
+
+.achievement-popup {
+  position: fixed;
+  bottom: -100px;
+  right: 20px;
+  background: linear-gradient(135deg, #1a1a1a, #2a2215);
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.45);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 999999;
+  transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+}
+.achievement-popup.show { bottom: 20px; }
+.achievement-popup .ach-icon { font-size: 30px; }
+.achievement-popup .ach-title { font-size: 10px; color: #ffd700; letter-spacing: 1px; font-weight: 800; }
+.achievement-popup .ach-name { font-size: 14px; font-weight: 800; color: #fff; }
+.achievement-popup .ach-desc { font-size: 11px; color: #ccc; }
+
+/* ========================================= */
+/* 6. АРЕНА (СВЕТЛЫЙ ДИЗАЙН)                 */
+/* ========================================= */
+.arena-screen .screen-wrapper {
+  width: 640px;
+  max-width: 96vw;
+  background: #f4ead5;
+  border: 4px solid #e5b947;
+  border-radius: 14px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 0 0 2px #fff;
+  position: relative;
+  overflow: hidden;
+  max-height: calc(100vh - 140px);
+  display: flex;
+  flex-direction: column;
+}
+
+.arena-screen .screen-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#d4c4a8 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.arena-screen .screen-header {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.arena-screen .screen-header-title {
+  background: rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(2px);
+  padding: 5px 42px;
+  border-radius: 0 0 20px 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 18px;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.55);
+  text-transform: uppercase;
+}
+
+.arena-screen .screen-body {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 14px 16px;
+}
+
+.arena-screen .arena-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.arena-screen .arena-header-info {
+  width: 100%;
+  text-align: center;
+  background: #fdf5e6;
+  border: 1px solid #c8b08a;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.arena-screen .arena-header-info h3 { margin: 0 0 4px; font-size: 14px; font-weight: 800; color: #4a3a2a; text-transform: uppercase; }
+.arena-screen .arena-header-info h3 span { color: #b8860b !important; font-size: 17px; font-weight: 900; }
+.arena-screen .arena-header-info p { margin: 0; font-size: 11px; color: #8a7a6a; }
+
+.arena-screen .arena-single-opponent-card {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px;
+  background: #fdf5e6;
+  border: 2px solid #e5b947;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.arena-screen .opponent-avatar-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 88px;
+  height: 88px;
+  font-size: 40px;
+  background: #fff9ed;
+  border: 2px solid #d1b894;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.arena-screen .opponent-avatar-box img { width: 100%; height: 100%; object-fit: contain; }
+
+.arena-screen .opponent-details { display: flex; flex-direction: column; gap: 6px; }
+.arena-screen .opponent-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #4a3a2a;
+  text-transform: uppercase;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #d1b894;
+}
+.arena-screen .opponent-power {
+  align-self: flex-start;
+  background: #222;
+  color: #ffd700;
+  border: 2px solid #ffd700;
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.arena-screen .opponent-stats-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.arena-screen .opponent-stats-row span {
+  background: #fff;
+  border: 1px solid #d1b894;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #4a3a2a;
+}
+.arena-screen .opponent-reward {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  background: #fff;
+  border: 1px solid #e5b947;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #4a3a2a;
+}
+.arena-screen .arena-coin-wrap { display: inline-flex; align-items: center; gap: 4px; }
+.arena-screen .arena-coin-icon { width: 15px; height: 15px; object-fit: contain; }
+
+.arena-screen .arena-actions-row { display: flex; width: 100%; gap: 10px; }
+.arena-screen .btn-fight {
+  flex: 1.3;
+  min-width: 0;
+  padding: 11px 10px;
+  background: linear-gradient(to bottom, #f7d56d, #e5b947);
+  border: 2px solid #c49a30;
+  border-radius: 8px;
+  color: #4a3a2a;
+  font-size: 15px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #b08825;
+}
+.arena-screen .btn-fight:active { transform: translateY(4px); box-shadow: none; }
+
+.arena-screen .btn-reroll {
+  flex: 1;
+  padding: 9px 8px;
+  background: #fff9ed;
+  border: 2px solid #d1b894;
+  border-radius: 8px;
+  color: #8a7a6a;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #c8b08a;
+}
+.arena-screen .btn-reroll:hover { background: #fff; border-color: #e5b947; }
+.arena-screen .btn-reroll:active { transform: translateY(3px); box-shadow: none; }
+
+/* Окно победы на арене */
+.arena-win-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  z-index: 3000;
+}
+.arena-win-overlay.hidden { display: none; }
+
+.arena-win-modal {
+  position: relative;
+  width: 350px;
+  max-width: 100%;
+  background: #f4ead5;
+  border: 4px solid #e5b947;
+  border-radius: 14px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65), inset 0 0 0 2px #fff;
+  overflow: hidden;
+  animation: arenaWinPop 0.3s ease-out;
+}
+@keyframes arenaWinPop { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.arena-win-header { display: flex; justify-content: center; padding-top: 8px; }
+.arena-win-title {
+  background: rgba(0, 0, 0, 0.16);
+  padding: 5px 46px;
+  border-radius: 0 0 20px 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.45);
+  font-size: 20px;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+.arena-win-body { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 16px 18px 20px; }
+.arena-win-emblem {
+  width: 78px;
+  height: 78px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 42px;
+  background: #222;
+  border: 3px solid #ffd700;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35), 0 0 18px rgba(255, 215, 0, 0.45);
+}
+.arena-win-subtitle { font-size: 14px; font-weight: 800; color: #4a3a2a; text-align: center; text-transform: uppercase; }
+.arena-win-rewards {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #fdf5e6;
+  border: 1px solid #c8b08a;
+  border-radius: 10px;
+  padding: 12px;
+}
+.arena-win-reward {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1.5px solid #e5b947;
+  border-radius: 20px;
+  padding: 6px 14px;
+}
+.arena-win-icon { width: 22px; height: 22px; object-fit: contain; }
+.arena-win-label { font-size: 12px; font-weight: 700; color: #8a7a6a; }
+.arena-win-value { font-size: 19px; font-weight: 900; color: #4a3a2a; }
+.arena-win-btn {
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(to bottom, #f7d56d, #e5b947);
+  border: 2px solid #c49a30;
+  border-radius: 8px;
+  color: #4a3a2a;
+  font-size: 16px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #b08825;
+}
+.arena-win-btn:active { transform: translateY(4px); box-shadow: none; }
+
+/* ========================================= */
+/* 7. ЛОТЕРЕЯ (ПОДТЯНУТА ПОД СВЕТЛУЮ ТЕМУ)   */
+/* ========================================= */
+.lottery-screen .screen-wrapper {
+  width: 680px;
+  max-width: 96vw;
+  background: #f4ead5;
+  border: 4px solid #e5b947;
+  border-radius: 14px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 0 0 2px #fff;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.lottery-screen .screen-header { display: flex; justify-content: center; padding-top: 8px; }
+.lottery-screen .screen-header-title {
+  background: rgba(0, 0, 0, 0.16);
+  padding: 5px 42px;
+  border-radius: 0 0 20px 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.45);
+  font-size: 18px;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.55);
+}
+.lottery-screen .screen-body { padding: 14px 18px 20px; }
+.lottery-map { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.lottery-title { font-size: 16px; font-weight: 900; color: #4a3a2a; text-transform: uppercase; }
+.lottery-board { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.lottery-balance { font-size: 14px; font-weight: 800; color: #4a3a2a; }
+.lottery-play-btn {
+  padding: 12px 24px;
+  background: linear-gradient(to bottom, #f7d56d, #e5b947);
+  border: 2px solid #c49a30;
+  border-radius: 10px;
+  color: #4a3a2a;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #b08825;
+}
+.lottery-play-btn:active { transform: translateY(4px); box-shadow: none; }
+
+/* ========================================= */
+/* 8. АДАПТИВ МОДАЛКИ БОССА И БОЯ            */
+/* ========================================= */
+@media (max-width: 900px) {
+  .battle-container { grid-template-columns: 1fr; height: auto; max-height: calc(100vh - 32px); overflow-y: auto; }
+  .boss-modal .left-panel, .boss-modal .right-panel { display: none; }
+  .mobile-close-btn { display: flex; align-items: center; justify-content: center; top: 10px; right: 10px; }
+}
+
+@media (max-width: 768px) {
+  .battle-skill-btn { width: 56px; height: 56px; }
+  .battle-timer-text { font-size: 15px; }
+  .battle-log { font-size: 12px; padding: 8px 14px; }
+}
+
+/* Ограничение размера колбы и любых иконок/иллюстраций в окнах победы и поражения */
+.boss-victory-screen img,
+.boss-defeat-screen img,
+.boss-victory-window img,
+.boss-victory-center img {
+  max-width: 72px;
+  max-height: 72px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.level-up-rewards .reward-item img,
+.reward-item .reward-img,
+.reward-img {
+  width: 28px;
+  height: 28px;
+  max-width: 28px;
+  max-height: 28px;
+  object-fit: contain;
+  flex: none;
+}

@@ -1,0 +1,589 @@
+/* ========================================= */
+/* LOCATION.CSS — Карта кампании, домик,     */
+/*                окна блокировки            */
+/* ========================================= */
+
+/* ========================================= */
+/* 1. КАМПАНИЯ (БОЛЬШАЯ КАРТА)               */
+/* ========================================= */
+.campaign-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  background: #050608;
+  box-sizing: border-box;
+  z-index: 250;
+}
+
+.campaign-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border-radius: 18px;
+  border: 2px solid rgba(229, 185, 71, 0.45);
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.85);
+  -webkit-overflow-scrolling: touch;
+}
+
+.campaign-map-large {
+  position: relative;
+  width: 2500px;
+  height: 2500px;
+  background: url("/contents/IconsGame/location.jpg") center/cover no-repeat;
+  background-color: #1a1510;
+}
+
+.campaign-map-large.blocked .location-node { pointer-events: none; }
+
+.campaign-top-bar {
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 280px;
+  max-width: 90%;
+  text-align: center;
+  padding: 12px 24px;
+  border-radius: 14px;
+  border: 2px solid rgba(229, 185, 71, 0.5);
+  background: rgba(20, 15, 10, 0.88);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.65);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.campaign-region {
+  color: #ffe3a1;
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.campaign-subtitle {
+  margin-top: 4px;
+  color: #ffb85c;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ========================================= */
+/* 2. ЛОКАЦИИ НА КАРТЕ                       */
+/* ========================================= */
+.location-node {
+  position: absolute;
+  width: 140px;
+  min-height: 96px;
+  padding: 10px;
+  border: 2px solid rgba(255, 228, 163, 0.5);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(62, 49, 33, 0.95), rgba(27, 26, 24, 0.95));
+  color: #fff1cb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 16px 26px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.location-node:hover {
+  transform: translate(-50%, -50%) translateY(-4px) scale(1.03);
+  border-color: #ffd76e;
+  box-shadow: 0 20px 32px rgba(0, 0, 0, 0.5);
+}
+
+.location-node.active {
+  border-color: #ffd76e;
+  box-shadow: 0 0 0 3px rgba(255, 215, 110, 0.25), 0 18px 30px rgba(0, 0, 0, 0.45);
+}
+
+.location-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0b94f;
+  color: #24190e;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.location-name { text-align: center; line-height: 1.15; font-size: 14px; }
+
+.location-node.custom-loc-bg-parent,
+.location-node.node-1 {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  width: 120px;
+  height: 120px;
+  padding: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  overflow: visible;
+}
+
+.location-node.custom-loc-bg-parent:hover,
+.location-node.node-1:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+  box-shadow: none;
+}
+
+.location-node .custom-loc-bg,
+.location-portal-bg {
+  position: absolute;
+  inset: 0;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  z-index: 1;
+  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.85));
+}
+
+.location-badge-content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.location-node.custom-loc-bg-parent .location-number,
+.location-node.node-1 .location-number {
+  background: none;
+  border: none;
+  color: #ffd76e;
+  font-size: 32px;
+  font-weight: 900;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 10px rgba(255, 215, 0, 0.6);
+  width: auto;
+  height: auto;
+  margin-top: 4px;
+}
+
+.location-node.custom-loc-bg-parent .location-name,
+.location-node.node-1 .location-name {
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #3a2712 0%, #1a1005 100%);
+  border: 1.5px solid #d4af37;
+  border-radius: 8px;
+  padding: 3px 10px;
+  color: #ffd76e;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+  z-index: 3;
+}
+
+.fog-of-war { display: none; }
+.location-node.locked { filter: grayscale(1) brightness(0.5); cursor: not-allowed; }
+.location-lock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 38px;
+  z-index: 20;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.9));
+  pointer-events: none;
+}
+
+/* Кнопки действий на карте */
+.map-actions-container {
+  position: absolute;
+  z-index: 50;
+  display: flex;
+  gap: 14px;
+  transform: translate(-50%, -50%);
+  animation: mapPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes mapPopIn {
+  from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+  to   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+.map-action-btn {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.2s;
+}
+.map-action-btn:hover { transform: scale(1.1); }
+.map-action-btn:active { transform: scale(0.95); }
+.map-action-img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.85)); }
+
+/* ========================================= */
+/* 3. ОКНО ДОМИКА (СВЕТЛЫЙ ДИЗАЙН)           */
+/* ========================================= */
+.house-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 650;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.house-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.house-window-new {
+  width: 860px;
+  max-width: 96vw;
+  max-height: calc(100vh - 100px);
+  background: #f4ead5;
+  border: 4px solid #e5b947;
+  border-radius: 14px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 0 0 2px #fff;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.house-window-new::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#d4c4a8 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.house-window-header-new {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding-top: 8px;
+  z-index: 10;
+}
+
+.house-header-title-new {
+  background: rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(2px);
+  padding: 5px 42px;
+  border-radius: 0 0 20px 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.45);
+  font-size: 18px;
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.55);
+  text-transform: uppercase;
+}
+
+.house-close-btn-new {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(to bottom, #e53935, #c62828);
+  color: #fff;
+  border: 2px solid #ff6659;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #8b1e1e;
+  z-index: 20;
+}
+.house-close-btn-new:active { transform: translateY(3px); box-shadow: none; }
+
+.house-window-content-new {
+  display: grid;
+  grid-template-columns: 1fr 270px;
+  gap: 18px;
+  padding: 18px 24px 22px;
+  position: relative;
+  z-index: 1;
+  overflow-y: auto;
+}
+
+.house-left-panel-new { display: flex; flex-direction: column; gap: 14px; }
+
+.house-image-container-new {
+  background: #fff9ed;
+  border: 1px solid #c8b08a;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 280px;
+}
+.house-image-container-new img { max-width: 100%; max-height: 320px; object-fit: contain; }
+
+.house-bottom-action-new {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: #fdf5e6;
+  border: 1px solid #d1b894;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.house-timer-info-new {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: #8a7a6a;
+}
+.js-house-timer { font-size: 16px; color: #c62828; font-weight: 900; }
+
+.house-reward-info-new {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1.5px solid #e5b947;
+  font-weight: 900;
+  color: #4a3a2a;
+}
+
+.house-right-panel-new {
+  background: #fdf5e6;
+  border: 1px solid #c8b08a;
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #4a3a2a;
+}
+
+.house-level-badge-new {
+  width: 50px;
+  height: 50px;
+  background: #222;
+  color: #ffd700;
+  border: 3px solid #ffd700;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.house-section-title,
+.house-section-title-new {
+  font-size: 12px;
+  color: #8a7a6a;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.house-next-reward-new {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #fff;
+  padding: 6px 15px;
+  border-radius: 20px;
+  border: 1.5px solid #e5b947;
+  width: 100%;
+  font-size: 17px;
+  font-weight: 900;
+  color: #4a3a2a;
+}
+
+.house-resource-item-new { margin: 8px 0; }
+.house-resource-icon-new {
+  width: 68px;
+  height: 68px;
+  background: linear-gradient(135deg, #2a5a3a, #1a3a25);
+  border: 2px solid #4a7a5a;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  font-size: 24px;
+  color: #fff;
+  font-weight: 900;
+}
+
+.house-btn-take-new,
+.house-btn-upgrade-new {
+  padding: 11px 20px;
+  background: linear-gradient(to bottom, #f7d56d, #e5b947);
+  border: 2px solid #c49a30;
+  border-radius: 8px;
+  color: #4a3a2a;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #b08825;
+  transition: all 0.1s;
+}
+.house-btn-upgrade-new { width: 100%; margin-top: auto; }
+.house-btn-take-new:active, .house-btn-upgrade-new:active { transform: translateY(3px); box-shadow: none; }
+.house-btn-take-new:disabled, .house-btn-upgrade-new:disabled {
+  background: #d8d0c0;
+  color: #8a8070;
+  border-color: #b8b0a0;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ========================================= */
+/* 4. ОКНА БЛОКИРОВКИ И "В РАЗРАБОТКЕ"       */
+/* ========================================= */
+.level-locked-modal,
+.in-dev-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.level-locked-backdrop,
+.in-dev-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+.level-locked-window,
+.in-dev-window {
+  position: relative;
+  z-index: 2;
+  width: min(380px, 100%);
+  background: #f4ead5;
+  border: 4px solid #e5b947;
+  border-radius: 16px;
+  padding: 26px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  color: #4a3a2a;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65), inset 0 0 0 2px #fff;
+}
+
+.locked-icon, .in-dev-icon { font-size: 52px; }
+.locked-title { color: #c62828; font-size: 22px; font-weight: 900; text-transform: uppercase; }
+.in-dev-title { color: #4a3a2a; font-size: 22px; font-weight: 900; text-transform: uppercase; }
+.locked-text, .in-dev-text { color: #5a4a3a; font-size: 15px; font-weight: 700; line-height: 1.4; }
+.locked-text strong { color: #c62828; font-size: 20px; font-weight: 900; }
+
+.locked-close-btn,
+.in-dev-close-btn {
+  margin-top: 8px;
+  width: 100%;
+  height: 46px;
+  background: linear-gradient(to bottom, #f7d56d, #e5b947);
+  border: 2px solid #c49a30;
+  border-radius: 10px;
+  color: #4a3a2a;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #b08825;
+  text-transform: uppercase;
+}
+.locked-close-btn:active, .in-dev-close-btn:active { transform: translateY(3px); box-shadow: none; }
+
+/* ========================================= */
+/* 5. АДАПТИВ ДЛЯ ТЕЛЕФОНОВ                  */
+/* ========================================= */
+@media (max-width: 768px) {
+  .campaign-screen { padding: 8px; }
+  .campaign-top-bar { top: 14px; padding: 8px 14px; min-width: 210px; }
+  .campaign-region { font-size: 16px; }
+  .location-node { width: 100px; min-height: 76px; padding: 6px; }
+  .location-node.node-1, .location-node.custom-loc-bg-parent { width: 90px; height: 90px; }
+  .map-action-btn { width: 56px; height: 56px; }
+
+  .house-window-content-new { grid-template-columns: 1fr; padding: 14px; }
+  .house-image-container-new { min-height: 160px; }
+  .house-image-container-new img { max-height: 160px; }
+  .house-bottom-action-new { flex-wrap: wrap; justify-content: center; }
+  .house-btn-take-new { width: 100%; }
+}
+
+/* Компактные иконки ресурсов/колб в домике и модальных окнах, но не основной арт домика */
+.house-reward-info-new img,
+.house-next-reward-new img,
+.house-resource-item-new img,
+.house-resource-icon-new img,
+.locked-icon img,
+.in-dev-icon img {
+  max-width: 28px !important;
+  max-height: 28px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+.house-image-container-new img {
+  max-width: 100%;
+  max-height: 320px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .house-image-container-new img {
+    max-height: 160px;
+  }
+}

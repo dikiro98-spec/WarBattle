@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1280, user-scalable=no" />
+  <title>WarBattle</title>
+  <link rel="stylesheet" href="css/character.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/shop.css" />
+  <link rel="stylesheet" href="css/location.css" />
+  <link rel="stylesheet" href="css/battle.css" />
+  <link rel="stylesheet" href="css/hero-slots.css" />
+<link rel="stylesheet" href="css/opengame.css">
+</head>
+<body>
+
+  <!-- ========================================= -->
+  <!-- ЭКРАН ЗАГРУЗКИ                            -->
+  <!-- ========================================= -->
+  <div id="loading-screen" class="loading-screen">
+    <div class="loading-bg"></div>
+    <div class="loading-content">
+      <img src="/contents/IconsGame/hero/Head/head_1.png" class="loading-logo" alt="">
+      <h1 class="loading-title">WARBATTLE</h1>
+      <div class="loading-bar-container">
+        <div class="loading-bar-fill" id="loading-bar-fill"></div>
+      </div>
+      <div class="loading-text" id="loading-text">ЗАГРУЗКА МИРА... 0%</div>
+    </div>
+  </div>
+
+  <!-- ========================================= -->
+  <!-- СЛУЖЕБНЫЕ КНОПКИ                          -->
+  <!-- ========================================= -->
+  <button id="music-toggle-btn" class="music-btn" title="Музыка">🔇</button>
+  <button id="fullscreen-btn" class="fullscreen-btn" title="На весь экран">⛶</button>
+  <audio id="bg-music" src="/contents/fonmusic.mp3" loop></audio>
+  <button id="reset-game-btn" title="Сбросить игру">🔄</button>
+  <button id="achievements-btn" class="achievement-toggle-btn" title="Достижения">🏆</button>
+
+  <div class="game-wrapper">
+
+    <!-- ========================================= -->
+    <!-- HUD                                       -->
+    <!-- ========================================= -->
+    <header class="top-hud-new">
+      <div class="hud-profile-new" style="cursor: pointer;">
+        <div class="hud-avatar-new">
+          <div class="hud-camera-zoom">
+            <img src="/contents/IconsGame/hero/hero_base.png" class="hud-face-body">
+            <img src="/contents/IconsGame/hero/Head/head_1.png" class="hud-face-helmet js-hud-helmet" style="display: none;">
+          </div>
+          <div class="hud-level-new">6</div>
+        </div>
+        <div class="hud-info-new">
+          <div class="hud-hp-bar-new">
+            <div class="hud-hp-fill-new" style="width: 100%;"></div>
+            <span class="hud-hp-text-new">168173/352317</span>
+          </div>
+          <div class="hud-days-new">ДНЕЙ В КОРОЛЕВСТВЕ: 3767</div>
+          <div class="hud-premium-new">ПРЕМИУМ: НЕ АКТИВЕН</div>
+        </div>
+      </div>
+
+      <div class="hud-right-new">
+        <div class="hud-resources-new">
+          <div class="hud-res-col-left">
+            <div class="hud-res-new silver-res">
+              <img src="/contents/IconsGame/hud-right/silver-res.png" class="hud-res-icon-img">
+              <div class="hud-res-badge"><span class="hud-res-val">2863</span></div>
+              <button class="hud-plus-new">+</button>
+            </div>
+            <div class="hud-res-new gold-res">
+              <img src="/contents/IconsGame/hud-right/gold-res.png" class="hud-res-icon-img">
+              <div class="hud-res-badge"><span class="hud-res-val">78485</span></div>
+              <button class="hud-plus-new">+</button>
+            </div>
+          </div>
+          <div class="hud-res-col-right">
+            <div class="hud-res-new blue-res">
+              <img src="/contents/IconsGame/hud-right/blue-res.png" class="hud-res-icon-img">
+              <div class="hud-res-badge"><span class="hud-res-val">106 / 91</span></div>
+              <button class="hud-plus-new">+</button>
+            </div>
+            <div class="hud-res-new crystal-res">
+              <img src="/contents/IconsGame/hud-right/crystal-res.png" class="hud-res-icon-img">
+              <div class="hud-res-badge"><span class="hud-res-val">21</span></div>
+              <button class="hud-plus-new">+</button>
+            </div>
+            <div class="hud-res-new food-res">
+              <img src="/contents/IconsGame/hud-right/food-res.png" class="hud-res-icon-img">
+              <div class="hud-res-badge"><span class="hud-res-val">194</span></div>
+              <button class="hud-plus-new">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========================================= -->
+    <!-- ГЛАВНОЕ ПОЛЕ                              -->
+    <!-- ========================================= -->
+    <main class="battlefield">
+
+      <div class="js-quests-container quests-sidebar"></div>
+
+      <!-- ПЕРСОНАЖ НА ГЛАВНОМ ЭКРАНЕ -->
+      <div class="main-screen-hero">
+        <div class="hero-slots-column hero-slots-left js-slots-left"></div>
+
+        <div class="hero-doll-center">
+          <div class="hero-nickname">
+            <span class="hero-nickname-text js-hero-nickname">НОВЫЙ ИГРОК</span>
+            <button class="hero-nickname-edit" type="button" aria-label="Изменить ник">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="hero-hp-bar battle-hp-bar player-hp">
+            <div class="hero-hp-fill battle-hp-fill js-hero-hp-fill"></div>
+            <span class="hero-hp-text battle-hp-text js-hero-hp-text">100/100</span>
+          </div>
+
+          <div class="battle-hero-doll js-hero-doll"></div>
+        </div>
+
+        <div class="hero-slots-column hero-slots-right js-slots-right"></div>
+      </div>
+
+      <!-- КНОПКА ВОЗВРАТА В БОЙ -->
+      <button class="return-to-battle-btn hidden" id="return-to-battle-btn">
+        <span class="return-icon">⚔️</span>
+        <span class="return-text">В БОЙ</span>
+      </button>
+
+      <!-- ОКНО БЛОКИРОВКИ ЛОКАЦИИ -->
+      <div class="level-locked-modal hidden">
+        <div class="level-locked-backdrop"></div>
+        <div class="level-locked-window">
+          <div class="locked-icon">🔒</div>
+          <div class="locked-title">ЛОКАЦИЯ ЗАКРЫТА</div>
+          <div class="locked-text">Для открытия нужен <strong class="js-req-level">3</strong> уровень!</div>
+          <button class="locked-close-btn js-locked-close">ПОНЯТНО</button>
+        </div>
+      </div>
+
+      <div class="battlefield-overlay"></div>
+
+
+      <section class="collections-screen hidden"></section>
+
+      <!-- ========================================= -->
+      <!-- ГИЛЬДИЯ (светлая тема, как кузница)       -->
+      <!-- ========================================= -->
+      <section class="guild-screen hidden">
+        <div class="screen-wrapper">
+          <button class="guild-close-btn" type="button">✕</button>
+          <div class="screen-header">
+            <div class="screen-header-title">ГИЛЬДИЯ</div>
+          </div>
+          <div class="screen-body"></div>
+        </div>
+      </section>
+
+      <!-- ========================================= -->
+      <!-- ДОСТИЖЕНИЯ                                -->
+      <!-- ========================================= -->
+      <div id="achievements-modal" class="achievements-modal hidden">
+        <div class="achievements-backdrop"></div>
+
+        <div class="house-window-new" style="width: 650px; max-height: 85vh; display: flex; flex-direction: column; z-index: 100;">
+          <div class="house-window-header-new">
+            <div class="house-header-title-new">ДОСТИЖЕНИЯ КОРОЛЕВСТВА</div>
+            <button class="house-close-btn js-achievements-close">✖</button>
+          </div>
+
+          <div class="house-window-content" style="display: flex; flex-direction: column; padding: 20px; overflow: hidden;">
+            <div class="achievements-list js-achievements-list" style="overflow-y: auto; max-height: 60vh; display: flex; flex-direction: column; gap: 12px; padding-right: 6px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================= -->
+      <!-- КАМПАНИЯ                                  -->
+      <!-- ========================================= -->
+      <section class="campaign-screen hidden">
+        <div class="campaign-viewport">
+          <div class="campaign-map-large">
+            <div class="map-actions-container hidden"></div>
+          </div>
+        </div>
+        <div class="campaign-top-bar">
+          <div class="campaign-region">Руины древнего форта</div>
+          <div class="campaign-subtitle">ИДЁТ ЗАХВАТ РАЙОНА</div>
+        </div>
+      </section>
+
+      <!-- ========================================= -->
+      <!-- АРЕНА                                     -->
+      <!-- ========================================= -->
+      <section class="arena-screen hidden">
+        <div class="screen-wrapper">
+          <div class="screen-header"><div class="screen-header-title">АРЕНА</div></div>
+          <div class="screen-body">
+            <div class="arena-content js-arena-opponents"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================= -->
+      <!-- КУЗНИЦА (светлая тема, как магазин)       -->
+      <!-- ========================================= -->
+      <section class="forge-screen hidden">
+        <div class="forge-window">
+          <button class="forge-close-btn" type="button">✕</button>
+
+          <div class="forge-window-header">
+            <div class="forge-window-title">КУЗНИЦА</div>
+          </div>
+
+          <div class="forge-layout">
+            <aside class="forge-sidebar">
+              <div class="forge-categories"></div>
+            </aside>
+
+            <section class="forge-center">
+              <div class="forge-hero-art">⚒️</div>
+            </section>
+
+            <section class="forge-items-section">
+              <div class="forge-items-header">
+                <div class="forge-items-title">Оружие</div>
+                <div class="forge-balance">
+                  <img src="/contents/IconsGame/hud-right/gold-res.png" class="forge-balance-icon" alt="">
+                  <strong class="js-forge-gold">0</strong>
+                </div>
+              </div>
+              <div class="forge-items-grid js-forge-items"></div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================= -->
+      <!-- ЛОТЕРЕЯ                                   -->
+      <!-- ========================================= -->
+      <section class="lottery-screen hidden">
+        <div class="screen-wrapper">
+          <div class="screen-header"><div class="screen-header-title">ЛОТЕРЕЯ</div></div>
+          <div class="screen-body">
+            <div class="lottery-map">
+              <div class="lottery-top-bar"><div class="lottery-title">ИСПЫТАЙ УДАЧУ!</div></div>
+              <div class="lottery-board js-lottery-board"></div>
+              <div class="lottery-balance">КРИСТАЛЛЫ: <strong class="js-lottery-crystals">0</strong> 💎</div>
+              <button class="lottery-play-btn js-lottery-play" type="button">
+                 <span class="lottery-cost js-lottery-cost">БЕСПЛАТНО</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================= -->
+      <!-- ОКНО БОССА                                -->
+      <!-- ========================================= -->
+      <section class="boss-modal hidden">
+        <div class="boss-modal-backdrop"></div>
+        <div class="battle-container">
+
+          <div class="side-panel left-panel">
+            <div class="panel-decorator-top"></div>
+            <div class="top-title">ТОП ЗА НЕДЕЛЮ</div>
+            <ul class="top-list">
+              <li class="top-item"><span class="rank">1</span><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=NS" class="avatar"><span class="name">NS Татьяна</span><span class="score">⚔️ 31</span></li>
+              <li class="top-item"><span class="rank">2</span><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=ALK" class="avatar"><span class="name">[ALK] Николай</span><span class="score">⚔️ 31</span></li>
+              <li class="top-item"><span class="rank">3</span><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=BC" class="avatar"><span class="name">[BC]twinMASTER</span><span class="score">⚔️ 30</span></li>
+            </ul>
+            <div class="update-text">*Обновляется каждые 5 минут</div>
+            <div class="panel-decorator-bottom"></div>
+          </div>
+
+          <div class="center-panel">
+            <button class="close-btn boss-modal-close mobile-close-btn">✖</button>
+
+            <div class="boss-header">
+              <div class="boss-name">БОСС</div>
+              <div class="boss-hp-bar">
+                <div class="boss-hp-fill" style="width: 100%;"></div>
+                <div class="boss-hp-text js-boss-preview-hp">30 / 30</div>
+              </div>
+              <div class="chance-bar-wrapper mobile-limit-bar" style="margin-top: 10px; width: 90%; margin-left: auto; margin-right: auto;">
+                <div class="chance-bar-bg">
+                  <div class="chance-bar-fill js-boss-trophy-fill" style="width:100%;"></div>
+                  <div class="chance-bar-text js-boss-trophy-text">30 / 30</div>
+                </div>
+                <div class="boss-reset-timer js-boss-reset-time" style="text-align: center; font-size: 11px; color: #ccc; margin-top: 5px; text-shadow: 1px 1px 2px #000;">+1 ПОПЫТКА ЧЕРЕЗ: 60 мин</div>
+              </div>
+            </div>
+
+            <div class="boss-image-container">
+              <img src="/contents/IconsGame/boss.png" alt="Босс" class="boss-image">
+            </div>
+
+            <div class="fight-btn-container">
+              <button class="btn-fight boss-fight-btn">В БОЙ</button>
+              <div class="stamina-cost">
+                <span class="stamina-icon"><img src="/contents/IconsGame/hud-right/blue-res.png" class="reward-img"></span>
+                <span class="js-boss-stamina-cost">1</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-panel right-panel">
+            <div class="panel-decorator-top"></div>
+            <button class="close-btn boss-modal-close">✖</button>
+            <div class="desc-title">ОПИСАНИЕ</div>
+            <div class="desc-text js-boss-desc">Главарь гоблинской шайки у разрушенного форта.</div>
+            <div class="stat-title">АТАКА</div>
+            <div class="attack-stat"><div class="attack-icon">⚔️</div><span class="js-boss-damage">15</span></div>
+            <div class="stat-title">МОЖЕТ ВЫПАСТЬ</div>
+            <div class="loot-container">
+              <div class="loot-item gold-star"><span class="js-boss-reward-gold">20</span> 🪙</div>
+              <div class="loot-item"><span class="js-boss-reward-exp">75</span> ⭐</div>
+              <div class="loot-item"><span class="js-boss-reward-tail">1</span> <span class="js-boss-reward-icon">🦎</span></div>
+            </div>
+            <div class="chance-bar-wrapper desktop-limit-bar">
+              <div class="chance-bar-bg">
+                <div class="chance-bar-fill js-boss-trophy-fill" style="width:100%;"></div>
+                <div class="chance-bar-text js-boss-trophy-text">30 / 30</div>
+              </div>
+              <div class="boss-reset-timer js-boss-reset-time" style="text-align: center; font-size: 11px; color: #888; margin-top: 5px;">+1 ПОПЫТКА ЧЕРЕЗ: 60 мин</div>
+            </div>
+            <div class="panel-decorator-bottom"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ========================================= -->
+      <!-- ЭКРАН БОЯ                                 -->
+      <!-- ========================================= -->
+      <section class="boss-battle-screen hidden">
+        <div class="battle-bg"></div>
+
+        <button class="battle-close-btn">✖</button>
+
+        <div class="battle-layout">
+
+          <!-- Бойцы -->
+          <div class="battle-arena">
+
+            <!-- ИГРОК -->
+            <div class="battle-fighter battle-fighter-player">
+              <div class="battle-name js-battle-player-name">Игрок</div>
+              <div class="battle-hp-bar player-hp">
+                <div class="battle-hp-fill battle-player-hp-fill" style="width: 100%;"></div>
+                <span class="battle-hp-text battle-player-hp-text">100/100</span>
+              </div>
+              <div class="battle-rage-bar">
+                <div class="battle-rage-fill battle-player-rage-fill" style="width: 0%;"></div>
+                <span class="battle-rage-text battle-player-rage-text">0/10</span>
+              </div>
+              <div class="actor player-actor">
+                <div class="battle-hero-doll js-hero-doll"></div>
+              </div>
+            </div>
+
+            <!-- ТАЙМЕР -->
+            <div class="battle-timer-text">01:00:00</div>
+
+            <!-- БОСС -->
+            <div class="battle-fighter battle-fighter-boss">
+              <div class="battle-name battle-boss-name">Босс</div>
+              <div class="battle-hp-bar boss-hp">
+                <div class="battle-hp-fill battle-boss-hp-fill" style="width: 100%;"></div>
+                <span class="battle-hp-text battle-boss-hp-text">30/30</span>
+              </div>
+              <div class="actor boss-actor battle-boss-art"></div>
+            </div>
+
+          </div>
+
+          <!-- Расходники -->
+          <div class="battle-consumables">
+            <div class="battle-item battle-item-scroll-gray"><img src="/contents/IconsGame/gray.sweater.png" class="consumable-img"><span class="battle-item-count js-gray-scroll-count">1</span></div>
+            <div class="battle-item battle-item-scroll-gold"><img src="/contents/IconsGame/goldsweater.png" class="consumable-img"><span class="battle-item-count js-gold-scroll-count">1</span></div>
+            <div class="battle-item battle-item-potion"><img src="/contents/IconsGame/HPbutel.png" class="consumable-img"><span class="battle-item-count js-potion-count">1</span></div>
+          </div>
+
+          <!-- Навыки -->
+          <div class="battle-skill-row">
+            <button class="battle-skill-btn battle-basic-attack-btn"><img src="/contents/IconsGame/talent.png" class="skill-img"></button>
+            <button class="battle-skill-btn battle-fierce-btn"><img src="/contents/IconsGame/talent 1.png" class="skill-img"><span class="battle-skill-cost">3 ЯР</span></button>
+            <button class="battle-skill-btn battle-shield-btn"><img src="/contents/IconsGame/talent2.png" class="skill-img"><span class="battle-skill-cost">4 ЯР</span></button>
+            <button class="battle-skill-btn battle-invis-btn"><img src="/contents/IconsGame/talent3.png" class="skill-img"><span class="battle-skill-cost">9 ЯР</span></button>
+          </div>
+
+          <!-- Лог -->
+          <div class="battle-log">Бой начался...</div>
+
+        </div>
+
+        <!-- КНОПКИ ПОСЛЕ СМЕРТИ -->
+        <div class="battle-death-actions hidden">
+          <button class="battle-revive-btn">
+            <img src="/contents/IconsGame/resurrection.png" class="death-action-img">
+            <span class="death-action-text">ВОСКРЕСНУТЬ</span>
+          </button>
+          <button class="battle-escape-btn">
+            <img src="/contents/IconsGame/running.png" class="death-action-img">
+            <span class="death-action-text">СБЕЖАТЬ</span>
+          </button>
+        </div>
+      </section>
+
+<!-- ========================================= -->
+      <!-- ЭКРАН БОЯ                                 -->
+      <!-- ========================================= -->
+      <section class="boss-battle-screen hidden">
+        <div class="battle-bg"></div>
+
+        <button class="battle-close-btn">✖</button>
+
+        <div class="battle-layout">
+
+          <!-- Бойцы -->
+          <div class="battle-arena">
+
+            <!-- ИГРОК -->
+            <div class="battle-fighter battle-fighter-player">
+              <div class="battle-name js-battle-player-name">Игрок</div>
+              <div class="battle-hp-bar player-hp">
+                <div class="battle-hp-fill battle-player-hp-fill" style="width: 100%;"></div>
+                <span class="battle-hp-text battle-player-hp-text">100/100</span>
+              </div>
+              <div class="battle-rage-bar">
+                <div class="battle-rage-fill battle-player-rage-fill" style="width: 0%;"></div>
+                <span class="battle-rage-text battle-player-rage-text">0/10</span>
+              </div>
+              <div class="actor player-actor">
+                <div class="battle-hero-doll js-hero-doll"></div>
+              </div>
+            </div>
+
+            <!-- ТАЙМЕР -->
+            <div class="battle-timer-text">01:00:00</div>
+
+            <!-- БОСС -->
+            <div class="battle-fighter battle-fighter-boss">
+              <div class="battle-name battle-boss-name">Босс</div>
+              <div class="battle-hp-bar boss-hp">
+                <div class="battle-hp-fill battle-boss-hp-fill" style="width: 100%;"></div>
+                <span class="battle-hp-text battle-boss-hp-text">30/30</span>
+              </div>
+              <div class="actor boss-actor battle-boss-art"></div>
+            </div>
+
+          </div>
+
+          <!-- Расходники -->
+          <div class="battle-consumables">
+            <div class="battle-item battle-item-scroll-gray"><img src="/contents/IconsGame/gray.sweater.png" class="consumable-img"><span class="battle-item-count js-gray-scroll-count">1</span></div>
+            <div class="battle-item battle-item-scroll-gold"><img src="/contents/IconsGame/goldsweater.png" class="consumable-img"><span class="battle-item-count js-gold-scroll-count">1</span></div>
+            <div class="battle-item battle-item-potion"><img src="/contents/IconsGame/HPbutel.png" class="consumable-img"><span class="battle-item-count js-potion-count">1</span></div>
+          </div>
+
+          <!-- Навыки -->
+          <div class="battle-skill-row">
+            <button class="battle-skill-btn battle-basic-attack-btn"><img src="/contents/IconsGame/talent.png" class="skill-img"></button>
+            <button class="battle-skill-btn battle-fierce-btn"><img src="/contents/IconsGame/talent 1.png" class="skill-img"><span class="battle-skill-cost">3 ЯР</span></button>
+            <button class="battle-skill-btn battle-shield-btn"><img src="/contents/IconsGame/talent2.png" class="skill-img"><span class="battle-skill-cost">4 ЯР</span></button>
+            <button class="battle-skill-btn battle-invis-btn"><img src="/contents/IconsGame/talent3.png" class="skill-img"><span class="battle-skill-cost">9 ЯР</span></button>
+          </div>
+
+          <!-- Лог -->
+          <div class="battle-log">Бой начался...</div>
+
+        </div>
+
+        <!-- КНОПКИ ПОСЛЕ СМЕРТИ -->
+        <div class="battle-death-actions hidden">
+          <button class="battle-revive-btn">
+            <img src="/contents/IconsGame/resurrection.png" class="death-action-img">
+            <span class="death-action-text">ВОСКРЕСНУТЬ</span>
+          </button>
+          <button class="battle-escape-btn">
+            <img src="/contents/IconsGame/running.png" class="death-action-img">
+            <span class="death-action-text">СБЕЖАТЬ</span>
+          </button>
+        </div>
+      </section>
+      <!-- ========================================= -->
+      <!-- ЭКРАН ПОБЕДЫ                              -->
+      <!-- ========================================= -->
+      <section class="boss-victory-screen hidden">
+        <div class="boss-victory-overlay"></div>
+        <div class="boss-victory-window">
+          <div class="boss-victory-center">
+            <div class="boss-victory-trophy-left">Доступно трофеев: <strong class="daily-trophy-left">0</strong></div>
+            <div class="boss-victory-title">ПРОТИВНИК ПОВЕРЖЕН!</div>
+            <div class="boss-victory-drops-row">
+              <div class="boss-victory-drop-item js-drop-gold"><img src="/contents/IconsGame/hud-right/gold-res.png" class="reward-img"><strong class="boss-reward-gold">0</strong></div>
+              <div class="boss-victory-drop-item js-drop-exp"><img src="/contents/IconsGame/hud-right/Ex.png" class="reward-img"><strong class="boss-reward-exp">0</strong></div>
+              <div class="boss-victory-drop-item js-drop-tail"><span class="emoji-icon" style="font-size: 28px;">🦎</span><strong class="boss-reward-tail">0</strong></div>
+            </div>
+            <div class="boss-limit-warning js-limit-warning hidden">
+              <div class="limit-warning-title">ЛИМИТ ТРОФЕЕВ ИСЧЕРПАН</div>
+              <div class="limit-warning-text">Ждите пополнения!</div>
+            </div>
+            <div class="boss-my-damage">ТВОЙ УРОН: <strong class="boss-my-damage-value">0</strong></div>
+            <div class="boss-victory-actions">
+              <button class="boss-repeat-fight-btn">ПОВТОРИТЬ</button>
+              <div class="boss-repeat-cost"><img src="/contents/IconsGame/hud-right/blue-res.png" class="reward-img"> <span>1</span></div>
+              <button class="boss-victory-ok-btn">ОК</button>
+            </div>
+          </div>
+          <div class="boss-victory-bottom">
+            <div class="boss-victory-panel-title">ЛУЧШИЕ ВОИНЫ</div>
+            <div class="boss-victory-warrior"><span>1. [CC]-ZigZag</span><strong>3233</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================= -->
+      <!-- ЭКРАН ПОРАЖЕНИЯ                           -->
+      <!-- ========================================= -->
+      <section class="boss-defeat-screen hidden">
+        <div class="boss-victory-overlay"></div>
+        <div class="boss-victory-window">
+          <div class="boss-victory-center">
+            <div class="boss-victory-title" style="color: #ff4b4b;">БОЙ ПРОИГРАН!</div>
+            <div class="boss-my-damage" style="margin-top: 20px;">ТВОЙ УРОН: <strong class="boss-defeat-damage">0</strong></div>
+            <div class="boss-victory-actions" style="margin-top: 20px;">
+              <button class="boss-victory-ok-btn defeat-ok-btn">ОК</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================= -->
+      <!-- ОКНО ДОМИКА                               -->
+      <!-- ========================================= -->
+      <section class="house-modal hidden">
+        <div class="house-modal-backdrop"></div>
+        <div class="house-window-new">
+          <div class="house-window-header-new">
+            <div class="house-header-title-new js-house-title">МАГИЧЕСКАЯ ЛАВКА</div>
+            <button class="house-close-btn-new">✖</button>
+          </div>
+          <div class="house-window-content-new">
+            <div class="house-left-panel-new">
+              <div class="house-image-container-new"><img src="/contents/IconsGame/IconsLocation/Maglavka.jpg"></div>
+              <div class="house-bottom-action-new">
+                <div class="house-timer-info-new"><span>ЧЕРЕЗ</span><span class="js-house-timer">00:00:00</span></div>
+                <div class="house-reward-info-new">
+                  <img src="/contents/IconsGame/hud-right/silver-res.png" class="js-house-reward-icon" style="width: 24px; height: 24px;">
+                  <span class="js-house-income">+50</span>
+                </div>
+                <button class="house-btn-take-new js-house-collect">ЗАБРАТЬ</button>
+              </div>
+            </div>
+            <div class="house-right-panel-new">
+              <div class="house-level-badge-new js-house-level">1</div>
+              <div class="house-section-title">СЛЕДУЮЩИЙ УРОВЕНЬ</div>
+              <div class="house-next-reward-new">
+                <img src="/contents/IconsGame/hud-right/silver-res.png" class="js-house-next-icon" style="width: 20px; height: 20px;">
+                <span class="js-house-next-income-new">+100</span>
+              </div>
+              <div class="house-section-title-new">НЕОБХОДИМО:</div>
+              <div class="house-resource-item-new">
+                <div class="house-resource-icon-new">
+                  <span class="js-house-resource-icon">🦎</span>
+                  <span class="js-house-upgrade-cost">5</span>
+                </div>
+              </div>
+              <button class="house-btn-upgrade-new js-house-upgrade">УЛУЧШИТЬ</button>
+            </div>
+          </div>
+        </div>
+      </section>
+            <!-- ========================================= -->
+      <!-- ОКНО ПОБЕДЫ НА АРЕНЕ                      -->
+      <!-- ========================================= -->
+      <div class="arena-win-overlay hidden">
+        <div class="arena-win-modal">
+          <div class="arena-win-header"><div class="arena-win-title">ПОБЕДА!</div></div>
+          <div class="arena-win-body">
+            <div class="arena-win-emblem">🏆</div>
+            <div class="arena-win-subtitle js-arena-win-subtitle"></div>
+            <div class="arena-win-rewards">
+              <div class="arena-win-reward">
+                <img class="arena-win-icon" src="/contents/IconsGame/hud-right/gold-res.png" alt="Золото">
+                <span class="arena-win-value js-arena-win-gold">+0</span>
+              </div>
+              <div class="arena-win-reward">
+                <span class="arena-win-label">РЕЙТИНГ</span>
+                <span class="arena-win-value js-arena-win-rating">+0</span>
+              </div>
+            </div>
+            <button class="arena-win-btn js-arena-win-close" type="button">ЗАБРАТЬ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================= -->
+      <!-- ОКНО ПОВЫШЕНИЯ УРОВНЯ                     -->
+      <!-- ========================================= -->
+      <div class="level-up-overlay hidden">
+        <div class="level-up-content">
+          <h2 class="level-up-title">УРОВЕНЬ ПОВЫШЕН!</h2>
+          <div class="level-up-badge"><span>УРОВЕНЬ</span><span class="js-level-number">2</span></div>
+          <div class="level-up-rewards">
+            <div class="reward-item"><img src="/contents/IconsGame/hud-right/gold-res.png" class="reward-img"><div class="reward-amount js-reward-gold">+250</div></div>
+            <div class="reward-item"><img src="/contents/IconsGame/hud-right/blue-res.png" class="reward-img"><div>+50</div></div>
+            <div class="reward-item"><img src="/contents/IconsGame/hud-right/crystal-res.png" class="reward-img"><div>+1</div></div>
+          </div>
+          <button class="level-up-btn js-level-up-close">ЗАБРАТЬ</button>
+        </div>
+      </div>
+
+      <!-- ========================================= -->
+      <!-- ОКНО ТАЛАНТОВ                             -->
+      <!-- ========================================= -->
+<div class="talents-modal-overlay hidden" data-ui-overlay-bound="1">
+  <div class="talents-modal">
+    <div class="talents-header">
+      <div class="talents-modal-title">ТАЛАНТЫ ГЕРОЯ</div>
+      <button type="button" class="talents-close-btn" aria-label="Закрыть">✕</button>
+    </div>
+
+    <div class="talents-grid">
+      <div class="talent-card talent-card--wide" data-talent="staminaMastery">
+        <div class="talent-name">ВЫНОСЛИВОСТЬ</div>
+        <div class="talent-body">
+          <div class="talent-icon-wrap">
+            <img src="/contents/IconsGame/talent_hp.png" alt="Выносливость" class="talent-icon">
+            <span class="talent-level-badge js-talent-badge">0</span>
+          </div>
+          <div class="talent-meta">
+            <div class="talent-desc">+15 HP</div>
+            <div class="talent-level">УРОВЕНЬ: <span>0</span></div>
+            <div class="talent-cost">СТОИМОСТЬ: <span>100</span> серебра</div>
+          </div>
+        </div>
+        <button class="talent-upgrade-btn">УЛУЧШИТЬ</button>
+      </div>
+
+      <div class="talent-card" data-talent="fierceStrike">
+        <div class="talent-name">СВИРЕПЫЙ УДАР</div>
+        <div class="talent-body">
+          <div class="talent-icon-wrap">
+            <img src="/contents/IconsGame/talent 1.png" alt="Свирепый удар" class="talent-icon">
+            <span class="talent-level-badge js-talent-badge">0</span>
+          </div>
+          <div class="talent-meta">
+            <div class="talent-desc">+5 за ур.</div>
+            <div class="talent-level">УРОВЕНЬ: <span>0</span></div>
+            <div class="talent-cost">СТОИМОСТЬ: <span>120</span> золота</div>
+          </div>
+        </div>
+        <button class="talent-upgrade-btn">УЛУЧШИТЬ</button>
+      </div>
+
+      <div class="talent-card" data-talent="shieldBlock">
+        <div class="talent-name">БЛОК ЩИТОМ</div>
+        <div class="talent-body">
+          <div class="talent-icon-wrap">
+            <img src="/contents/IconsGame/talent2.png" alt="Блок щитом" class="talent-icon">
+            <span class="talent-level-badge js-talent-badge">0</span>
+          </div>
+          <div class="talent-meta">
+            <div class="talent-desc">Баз. удар, ответ -1 ур.</div>
+            <div class="talent-level">УРОВЕНЬ: <span>0</span></div>
+            <div class="talent-cost">СТОИМОСТЬ: <span>90</span> золота</div>
+          </div>
+        </div>
+        <button class="talent-upgrade-btn">УЛУЧШИТЬ</button>
+      </div>
+
+      <div class="talent-card" data-talent="invisibleStrike">
+        <div class="talent-name">НЕВИДИМЫЙ УДАР</div>
+        <div class="talent-body">
+          <div class="talent-icon-wrap">
+            <img src="/contents/IconsGame/talent3.png" alt="Невидимый удар" class="talent-icon">
+            <span class="talent-level-badge js-talent-badge">0</span>
+          </div>
+          <div class="talent-meta">
+            <div class="talent-desc">+7 за ур. (без ответа)</div>
+            <div class="talent-level">УРОВЕНЬ: <span>0</span></div>
+            <div class="talent-cost">СТОИМОСТЬ: <span>150</span> золота</div>
+          </div>
+        </div>
+        <button class="talent-upgrade-btn">УЛУЧШИТЬ</button>
+      </div>
+
+      <div class="talent-card" data-talent="masterHealer">
+        <div class="talent-name">МАСТЕР ЦЕЛИТЕЛЬ</div>
+        <div class="talent-body">
+          <div class="talent-icon-wrap">
+            <img src="/contents/IconsGame/talent_healer.png" alt="Мастер целитель" class="talent-icon">
+            <span class="talent-level-badge js-talent-badge">0</span>
+          </div>
+          <div class="talent-meta">
+            <div class="talent-desc">+3 к зелью за ур.</div>
+            <div class="talent-level">УРОВЕНЬ: <span>0</span></div>
+            <div class="talent-cost">СТОИМОСТЬ: <span>110</span> золота</div>
+          </div>
+        </div>
+        <button class="talent-upgrade-btn">УЛУЧШИТЬ</button>
+      </div>
+    </div>
+
+    <div class="talents-footer-stats">
+      <div class="talent-footer-stat">
+        <img src="/contents/IconsGame/talent_hp.png" alt="Общее здоровье" class="talent-footer-icon-img">
+        <div class="talent-footer-info">
+          <span>ОБЩЕЕ ЗДОРОВЬЕ</span>
+          <strong class="js-total-health">100</strong>
+        </div>
+      </div>
+
+      <div class="talent-footer-stat">
+        <div class="talent-footer-info talent-footer-info--right">
+          <span>ОБЩИЙ УРОН</span>
+          <strong class="js-total-damage">10</strong>
+        </div>
+        <img src="/contents/IconsGame/talent 1.png" alt="Общий урон" class="talent-footer-icon-img">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+      
+<!-- ЭКРАН ПРИКЛЮЧЕНИЙ -->
+<section class="adventures-screen hidden">
+  <div class="adv-top-bar">
+    <button class="adv-close-btn">✖</button>
+    <div class="adv-title">ПРИКЛЮЧЕНИЯ</div>
+  </div>
+
+  <div class="adv-grid">
+    <!-- 1. Походы -->
+    <div class="adv-card">
+      <div class="adv-card-title">Походы</div>
+      <div class="adv-card-image" style="background-image: url(/contents/IconsGame/cool/hike.jpg');">
+        <div class="adv-placeholder"></div>
+      </div>
+      <button class="adv-btn">ПЕРЕЙТИ В ПОХОДЫ</button>
+    </div>
+
+    <!-- 2. Пещера гоблинов -->
+    <div class="adv-card">
+      <div class="adv-card-title">Пещера гоблинов</div>
+      <div class="adv-card-image" style="background-image: url('/contents/IconsGame/adv_goblin.jpg');">
+        <div class="adv-placeholder">🕷️</div>
+      </div>
+      <button class="adv-btn">ВОЙТИ</button>
+    </div>
+
+    <!-- 3. Древняя гробница -->
+    <div class="adv-card">
+      <div class="adv-card-title">Древняя гробница</div>
+      <div class="adv-card-image" style="background-image: url('/contents/IconsGame/adv_tomb.jpg');">
+        <div class="adv-placeholder">⚰️</div>
+      </div>
+      <button class="adv-btn" onclick="document.querySelector('.campaign-screen').classList.remove('hidden'); document.querySelector('.adventures-screen').classList.add('hidden');">ВОЙТИ</button>
+    </div>
+
+    <!-- 4. Гробница оракула -->
+    <div class="adv-card" data-location="oracle-tomb">
+      <div class="adv-card-title">Гробница оракула</div>
+      <div class="adv-card-image" style="background-image: url('/contents/IconsGame/adv_oracle.jpg');">
+        <div class="adv-placeholder">🔮</div>
+      </div>
+
+      <!-- Прогресс по этапам -->
+      <div class="adv-stages">
+        <div class="adv-stage" data-stage="1"></div>
+        <div class="adv-stage" data-stage="2"></div>
+        <div class="adv-stage" data-stage="3"></div>
+        <div class="adv-stage" data-stage="4"></div>
+        <div class="adv-stage" data-stage="5"></div>
+      </div>
+
+      <div class="adv-card-info">
+        <div class="adv-reward">🏆 <span class="adv-reward-value">0 / 5</span> этапов</div>
+        <div class="adv-req">Требуется уровень: <span class="adv-req-level">12</span></div>
+      </div>
+
+      <button class="adv-enter-btn">Войти в гробницу</button>
+    </div>
+
+    <!-- 5. Рейды -->
+    <div class="adv-card">
+      <div class="adv-card-title">Рейды</div>
+      <div class="adv-card-image" style="background-image: url('/contents/IconsGame/adv_raid.jpg');">
+        <div class="adv-placeholder">⚔️</div>
+      </div>
+      <button class="adv-btn">ВОЙТИ</button>
+    </div>
+
+    <!-- 6. Захват районов -->
+    <div class="adv-card">
+      <div class="adv-card-title">Захват районов</div>
+      <div class="adv-card-image" style="background-image: url('/contents/IconsGame/adv_map.jpg');">
+        <div class="adv-placeholder">🚩</div>
+      </div>
+      <button class="adv-btn">ОТКРЫТЬ</button>
+    </div>
+  </div>
+</section>
+
+            <!-- ========================================= -->
+      <!-- ОКНО МАГАЗИНА (светлая тема)              -->
+      <!-- ========================================= -->
+      <div class="shop-modal-overlay hidden">
+        <div class="shop-modal">
+          <div class="shop-modal-header">
+            <div class="shop-modal-title">МАГАЗИН</div>
+          </div>
+          <button class="shop-close-btn">✕</button>
+
+          <div class="shop-layout">
+            <aside class="shop-sidebar">
+              <div class="shop-categories js-shop-categories"></div>
+            </aside>
+
+            <section class="shop-center">
+              <div class="shop-hero-art">🛡️</div>
+              <button class="shop-save-btn">СОХРАНИТЬ И ВЫЙТИ</button>
+            </section>
+
+            <section class="shop-items-section">
+              <div class="shop-items-header">
+                <div class="shop-items-title js-shop-category-title">Оружие</div>
+                <div class="shop-balance">
+                  <div class="shop-balance-item"><span>СЕРЕБРО:</span><strong class="js-shop-silver">0</strong></div>
+                  <div class="shop-balance-item"><span>ЗОЛОТО:</span><strong class="js-shop-gold">0</strong></div>
+                </div>
+              </div>
+              <div class="shop-items-grid js-shop-items"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+    </main>
+   <div class="rating-modal hidden">
+  <div class="rating-backdrop"></div>
+
+  <!-- Левое меню категорий -->
+  <aside class="rating-side-menu">
+    <button class="rating-cat-btn active" data-cat="exp">ОПЫТ</button>
+    <button class="rating-cat-btn" data-cat="power">СИЛА</button>
+    <button class="rating-cat-btn" data-cat="achievements">ДОСТИЖЕНИЯ</button>
+    <button class="rating-cat-btn" data-cat="damage">УРОН</button>
+  </aside>
+
+  <!-- Основное окно -->
+  <div class="rating-window">
+    <button class="rating-close-btn js-rating-close" type="button">✖</button>
+
+    <div class="rating-title js-rating-title">ОПЫТ</div>
+
+    <div class="rating-tabs">
+      <button class="rating-tab active" data-scope="all">ВСЕ ИГРОКИ</button>
+      <button class="rating-tab" data-scope="guild">ГИЛЬДИЯ</button>
+      <button class="rating-tab" data-scope="friends">ДРУЗЬЯ</button>
+    </div>
+
+    <div class="rating-table-wrap">
+      <div class="rating-list js-rating-list"></div>
+    </div>
+  </div>
+</div>
+ 
+<section class="bottom-panel-new">
+  <div class="bottom-nav-row-new">
+    <button class="nav-icon-btn-new js-open-character"><img src="/contents/IconsGame/herohud.png" class="nav-img"><span class="nav-text-new">ПЕРСОНАЖ</span></button>
+    <button class="nav-icon-btn-new js-open-shop"><img src="IconsGame/mg.jpg" class="nav-img"><span class="nav-text-new">МАГАЗИН</span></button>
+  <button class="nav-icon-btn-new js-open-collections"><img src="IconsGame/collection.jpg" class="nav-img"><span class="nav-text-new">КОЛЛЕКЦИИ</span></button>
+    <button class="nav-icon-btn-new js-open-arena"><img src="IconsGame/arena.jpg" class="nav-img"><span class="nav-text-new">АРЕНА</span></button>
+    <button class="nav-icon-btn-new campaign-btn-new js-campaign-toggle"><img src="IconsGame/company.jpg" class="nav-img"><span class="nav-text-new">КАМПАНИЯ</span></button>
+    <button class="nav-icon-btn-new js-open-forge"><img src="IconsGame/forge.jpg" class="nav-img"><span class="nav-text-new">КУЗНИЦА</span></button>
+    <button class="nav-icon-btn-new js-open-guild"><img src="IconsGame/guild.jpg" class="nav-img"><span class="nav-text-new">ГИЛЬДИЯ</span></button>
+    <button class="nav-icon-btn-new js-open-rating"><img src="/contents/IconsGame/rating.png" class="nav-img"><span class="nav-text-new">РЕЙТИНГ</span></button>
+    <button class="nav-icon-btn-new js-open-adventures">
+  <img src="/contents/IconsGame/adventures.png" class="nav-img">
+  <span class="nav-text-new">ПРИКЛЮЧЕНИЯ</span>
+</button>
+    <button class="nav-icon-btn-new js-open-lottery"><img src="IconsGame/lottery.jpg" class="nav-img"><span class="nav-text-new">ЛОТЕРЕЯ</span></button>
+  </div>
+
+  <!-- friends row без изменений -->
+</section>
+
+
+  <!-- ========================================= -->
+  <!-- ОКНО СМЕНЫ НИКА                           -->
+  <!-- ========================================= -->
+  <div class="nick-modal-overlay hidden" id="nickModal">
+    <div class="nick-modal">
+      <div class="nick-modal-title">Изменить ник</div>
+      <input type="text" class="nick-modal-input" id="nickInput" maxlength="14" placeholder="Введите ник" autocomplete="off">
+      <div class="nick-modal-error" id="nickError"></div>
+      <div class="nick-modal-buttons">
+        <button type="button" class="nick-btn nick-btn-save" id="nickSave">Сохранить</button>
+        <button type="button" class="nick-btn nick-btn-cancel" id="nickCancel">Отмена</button>
+      </div>
+    </div>
+  </div>
+    <!-- ========================================= -->
+  <!-- СКРИПТЫ                                   -->
+  <!-- ========================================= -->
+
+  <!-- 1. Заставка: первой, чтобы показалась до загрузки остального -->
+  <script src="js/loader.js"></script>
+
+  <!-- 2. Данные и утилиты: ни от чего не зависят -->
+  <script src="js/utils.js"></script>
+  <script src="js/game-data.js"></script>
+  <script src="gamedata.js"></script>
+  <script src="js/locations-data.js"></script>
+  <script src="js/equipment.js"></script><script src="js/boss-oracle.js" defer></script>
+
+
+  <!-- 3. Ядро: создаёт player, savePlayer, элементы HUD -->
+  <script src="js/script.js"></script>
+
+  <!-- 4. Модули: используют player -->
+  <script src="js/Achievement.js"></script>
+  <script src="js/shop.js"></script>
+  <script src="js/location.js"></script>
+  <script src="js/collections.js"></script>
+  <script src="js/collections-data.js"></script>
+  <script src="js/ui-fixes.js" defer></script>
+
+  <script src="js/arena.js"></script>
+  <script src="js/forge.js"></script>
+  <script src="js/lottery.js"></script>
+  <script src="js/guild.js"></script>
+  <script src="js/character.js"></script>
+<script src="js/adventures.js"></script>
+  <!-- 5. Отрисовка главного экрана: после магазина и экипировки -->
+  <script src="js/hero-slots.js"></script>
+
+</body>
+</html>
